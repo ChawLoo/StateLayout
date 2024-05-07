@@ -1,0 +1,17 @@
+{
+  "name": "@chawloo/state-layout",
+  "version": "1.0.0",
+  "description": "缺省状态的展示和切换，你值得拥有",
+  "keywords": [
+    "缺省页",
+    "状态页",
+    "空白页",
+    "加载页",
+    "StateLayout",
+    "MultiState"
+  ],
+  "main": "StateLayout.ets",
+  "author": "ChawLoo",
+  "license": "Apache-2.0",
+  "dependencies": {}
+}
