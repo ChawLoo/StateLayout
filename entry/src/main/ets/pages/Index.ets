@@ -2,7 +2,6 @@ import { StateEnum } from 'StateLayout/src/main/ets/components/StateEnum';
 import { router, SelectTitleBar } from '@kit.ArkUI';
 import StateConfig from 'StateLayout/src/main/ets/components/StateConfig';
 import StateLayoutComponent from 'StateLayout/src/main/ets/components/StateLayoutComponent';
-import { emitter } from '@kit.BasicServicesKit';
 import StateEventDispatcher from 'StateLayout/StateLayout';
 
 @Entry
