@@ -1,1 +1,4 @@
-export { MainPage } from './src/main/ets/components/mainpage/MainPage'
+import StateEventDispatcher from './src/main/ets/components/StateEventDispatcher'
+
+
+export default StateEventDispatcher

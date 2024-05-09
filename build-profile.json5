@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/chawloo/.ohos/config/default_StateLayout_CqAvbe9SoUVLis-eKhRlR680fRi03hwvLabkvkSIZrI=.cer",
+          "storePassword": "0000001B99B74633E0497F432C5E8CA2D1E1FD90B37AE5454EADE68BF694F85901694D46456D986AAF347D",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B35504F22DB1D038B280C7A0B447E2AABDDADEBA46CDC9F6145CB7463285D56545C1FE9454441A0",
+          "profile": "/Users/chawloo/.ohos/config/default_StateLayout_CqAvbe9SoUVLis-eKhRlR680fRi03hwvLabkvkSIZrI=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/chawloo/.ohos/config/default_StateLayout_CqAvbe9SoUVLis-eKhRlR680fRi03hwvLabkvkSIZrI=.p12"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",
