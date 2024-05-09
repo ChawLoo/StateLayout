@@ -4,153 +4,207 @@
 
 [StateLayout](https://github.com/ChawLoo/StateLayout.git) ，是一个针对HarmonyOS Next系统开发的沉浸式框架，采用官方底层API，简单、实用、高效。
 
-- 修改状态栏颜色
-- 修改状态栏文字图标颜色
-- 修改导航栏颜色
-- 修改导航栏图标颜色
+- 根据状态显示对应状态页面
+- 可以全局配置状态页样式
 
 ## 下载安装
 
-```javascript
+```
 ohpm install @chawloo/state-layout
 ```
 
 OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmony ohpm 包](https://gitee.com/openharmony-tpc/docs/blob/master/OpenHarmony_har_usage.md)
-## 重要的写前面
-因为框架采用window来修改状态栏和颜色，那用navigation和router切换页面也不会更改window，所以页面切换不会更改之前设置的属性
 
-如：RouterA设置了以下属性
-```typescript
-immersionBar.immersion({
-  transparentStatusBar: false,//不开启沉浸式
-  statusBarColor: '#987654',//修改状态栏颜色
-  statusBarContentColor: '#456789'//修改状态栏系统图标等颜色
-})
-```
-跳转RouterB后，仅设置以下属性
-```typescript
-immersionBar.immersion({
-  transparentStatusBar: true,//不开启沉浸式
-})
-```
-⚠️由于没有重新设置状态栏颜色和状态栏系统图标等颜色，那他会沿用RouterA中的`'#987654'` 和 `'#456789'`这两个颜色⚠️
-
-目前没有针对上一次的设置属性进行缓存，这个有待讨论，可以加也可以不加，大家可以提点建议
 ## 接口和属性列表
-接口列表
+### `StateConfig`属性列表
 
-| **接口**                                     | 参数                                          | 功能       |
-| -------------------------------------------- | --------------------------------------------- | ---------- |
-| init(window.Window)                          |                                               | 初始化     |
-| immersionBar.immersion(ImmersionBarSettings) | [ImmersionBarSettings](#请求配置)：系统栏配置 | 设置系统栏 |
+| 属性               | 类型            | 描述          |
+|:-----------------|:--------------|:------------|
+| loadingStr       | string        | 加载缺省页提示文本   |
+| progressColor    | ResourceColor | 加载缺省页进度条颜色  |
+| emptyStr         | string        | 空白缺省页提示文本   |
+| emptyIcon        | string        | 空白缺省页图标     |
+| errorStr         | string        | 错误缺省页提示文本   |
+| errorIcon        | Resource      | 错误缺省页图标     |
+| networkErrorStr  | string        | 网络错误缺省页提示文本 |
+| networkErrorIcon | Resource      | 网络错误缺省页图标   |
+| retryStr         | string        | 重试按钮文本      |
 
-属性列表
+### 全局配置`globalStateConfig`配置接口
 
-| **属性**                  | 类型    | 描述                                                         |
-| :------------------------ | :------ | ------------------------------------------------------------ |
-| transparentStatusBar      | boolean | 是否透明状态栏（即是否全屏，此全屏非隐藏状态栏和系统栏，注意区分） |
-| statusBarColor            | string  | 状态栏颜色，背景色                                           |
-| statusBarContentColor     | string  | 状态栏内容颜色，即内部的系统图标颜色                         |
-| navigationBarColor        | string  | 导航栏（导航条）颜色                                         |
-| navigationBarContentColor | string  | 导航栏内容颜色（导航条或导航图标）                           |
+| 接口                                   | 描述                    |
+|:-------------------------------------|:----------------------|
+| loadingConfig(LoadingConfig)         | 配置加载中的提示文案和Progress颜色 |
+| emptyConfig(EmptyConfig)             | 配置空白页的提示文案和图标         |
+| errorConfig(ErrorConfig)             | 配置错误中的提示文案、图标和重试文本    |
+| networkErrConfig(NetworkErrorConfig) | 配置网络错误中的提示文案、图标和重试文本  |
 
-## 使用示例
-
-初始化，使用前切记一定要初始化框架，因为本项目采用window来进行修改颜色，需要传入window
-
-```
-//在EntryAbility的#onWindowStageCrate(windowStage:window.WindowStage)中初始化
-export default class EntryAbility extends UIAbility {
-  ...
-
-  onWindowStageCreate(windowStage: window.WindowStage): void {
-    // Main window is created, set main page for this ability
-    hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
-    //通过windowStage获取主window，如果获取失败也就无法修改了
-    // windowStage.getMainWindow((err: BusinessError, data) => {
-    //   const errCode: number = err.code
-    //   if (errCode) {
-    //     L.e(`Failed to obtain the main window. Cause:${JSON.stringify(err)}`)
-    //     return
-    //   }
-    //   //初始化框架
-    //   immersionBar.init(data)
-    // })
-    //或者可以同步获取window
-    immersionBar.init(windowStage.getMainWindowSync())
-    windowStage.loadContent('pages/main/RootPage', (err, data) => {
-      if (err.code) {
-        hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
-        return;
-      }
-      hilog.info(0x0000, 'testTag', 'Succeeded in loading the content. Data: %{public}s', JSON.stringify(data) ?? '');
-    });
-  }
-
-  ...
-}
-
-```
-
-
-
-## 使用说明
-
-### ImmersionBar API
-
-#### 在对应页面的aboutToAppear()中设置
-
+## 全局配置
+可在任意地方配置，推荐`EntryAbility`中配置
 ```typescript
+//在windowStageCreate中配置即可
+onWindowStageCreate(windowStage: window.WindowStage): void {
+  //全局配置缺省页的各种图标和文案
+  StateConfig.globalStateConfig = new StateConfig()
+    .loadingConfig({
+      progressColor: Color.Red
+    })
+    .emptyConfig({
+      emptyStr: '我是全局配置的空白提示文案',
+      emptyIcon: $r('app.media.state_empty')
+    })
+  //也可以直接调用属性配置
+  StateConfig.globalStateConfig.retryStr = "立即重试"
+  });
+}
+```
+## 使用
+
+#### 简单用法
+```typescript
+@Entry
+@Component
+struct Index {
+  @State message: string = 'Hello World';
+  @State config: StateConfig = new StateConfig()
+  @State state: StateEnum = StateEnum.LOADING
+
   aboutToAppear(): void {
-  immersionBar.immersion({
-    statusBarColor: "#3369E7",
-    statusBarContentColor: "#FFFFFF"
-  })
-}
-```
-
-如果想在Tabs中设置，则可以在其onChange通过索引或其他方式修改
-
-```typescript
-Tabs({ barPosition: BarPosition.End, controller: this.tabsController })
-{
-  ...
-}
-.
-onChange((index) => {
-  switch (index) {
-    case 0: {
-      immersionBar.immersion({
-        statusBarColor: "#FFFFFF",
-        statusBarContentColor: "#000000"
-      })
-      break;
-    }
-    case 4: {
-      immersionBar.immersion({
-        statusBarColor: "#3369E7",
-        statusBarContentColor: "#FFFFFF"
-      })
-      break;
-    }
-    default: {
-      immersionBar.immersion({
-        statusBarColor: "#FFFFFF",
-        statusBarContentColor: "#000000",
-        transparentStatusBar: true
-      })
-      break;
-    }
+    this.loading()
   }
 
-  this.currentIndex = index
-})
-  .padding({ bottom: immersionBar.getNavigationIndicatorHeight() })
-  .animationDuration(0)
-  .scrollable(false)
-  .barMode(BarMode.Fixed)
-  .barWidth("100%")
+  //模拟网络加载
+  loading() {
+    const timerId = setInterval(() => {
+      //简单设置状态
+      this.state = StateEnum.CONTENT
+      clearInterval(timerId)
+    }, 2000)
+  }
+
+  build() {
+    Column() {
+      //添加缺省页组件
+      StateLayoutComponent({
+        state: this.state,
+        stateConfig: this.config,
+        retry: () => {
+
+        },
+      }) {
+        Text(`加载成功后的内容:::${this.message}`)
+          .fontSize(30)
+          .fontColor(Color.Black)
+          .onClick(() => {
+            router.pushUrl({
+              url: "pages/StateLayoutPage"
+            })
+          })
+      }
+    }
+    .height('100%')
+    .width('100%')
+  }
+}
 ```
+
+#### 进阶用法
+
+通过`StateEventDispatcher`来发送消息给子组件进行状态切换，StateLayoutComponent需要接受一个EventID来区分来自哪个界面
+
+| 方法             | 说明           |
+|:---------------|:-------------|
+| 构造方法           | 内部初始化EventID |
+| loading()      | 展示加载中页面      |
+| empty()        | 展示空白页面       |
+| error()        | 展示错误页面       |
+| content()      | 展示错误页面       |
+| networkError() | 展示网络错误页面     |
+
+
+```typescript
+@Entry
+@Component
+struct Index {
+  @State message: string = 'Hello World';
+  @State config: StateConfig = new StateConfig()
+  @State state: StateEnum = StateEnum.LOADING
+  stateEvent = new StateEventDispatcher()
+
+  aboutToAppear(): void {
+    this.loading()
+  }
+
+  //模拟网络加载
+  loading() {
+    const timerId = setInterval(() => {
+      this.state = StateEnum.CONTENT
+      clearInterval(timerId)
+    }, 2000)
+  }
+
+  build() {
+    Column() {
+      SelectTitleBar({
+        options: [
+          { value: '加载中' },
+          { value: '空白页' },
+          { value: '错误页' },
+          { value: '没有网络' },
+          { value: '加载成功' },
+        ],
+        selected: 0,
+        onSelected: (index) => {
+          switch (index) {
+            case 0:
+              this.state = StateEnum.LOADING
+              break
+            case 1:
+              this.config.emptyStr = '不一样的空白页文案' //修改后当前页面就一直是这个，除非再次修改
+              this.config.emptyIcon = $r('app.media.state_empty') //修改后当前页面就一直是这个，除非再次修改
+              this.stateEvent.empty()
+              break
+            case 2:
+              this.config.retryStr = '给我重试' //修改后当前页面就一直是这个，除非再次修改
+              this.stateEvent.error()
+              break
+            case 3:
+              this.stateEvent.networkError()
+              break
+            case 4:
+              this.stateEvent.content()
+              break
+          }
+        },
+        hidesBackButton: false
+      })
+      StateLayoutComponent({
+        state: this.state,
+        stateConfig: this.config,
+        retry: () => {
+
+        },
+        eventID: this.stateEvent.eventID
+      }) {
+        Text(`加载成功后的内容:::${this.message}`)
+          .fontSize(30)
+          .fontColor(Color.Black)
+          .onClick(() => {
+            router.pushUrl({
+              url: "pages/StateLayoutPage"
+            })
+          })
+      }
+    }
+    .height('100%')
+    .width('100%')
+  }
+}
+```
+
+## Feature
+
+整理调用方法来实现状态页切换同时，传入单次文案和图标。
 
 ## 约束与限制
 
@@ -162,8 +216,8 @@ DevEco Studio NEXT Developer Beta1  (5.0.3.200), SDK: API11(4.1.0) 设备：Mate
 
 ## 贡献代码
 
-使用过程中发现任何问题都可以提[Issue](https://gitee.com/chawloo_organization/StateLayout.git) 给我们，当然，我们也非常欢迎你给我们提[PR](https://gitee.com/chawloo_organization/StateLayout/issues) 。
+使用过程中发现任何问题都可以提[Issue](https://github.com/ChawLoo/StateLayout/issues) 给我们，当然，我们也非常欢迎你给我们提[PR](https://github.com/ChawLoo/StateLayout/pulls) 。
 
 ## 开源协议
 
-本项目基于 [MIT](https://gitee.com/chawloo_organization/StateLayout/blob/master/library/LICENSE) ，请自由地享受和参与开源。
+本项目基于 [Apache-2.0](https://gitee.com/chawloo_organization/StateLayout/blob/master/library/LICENSE) ，请自由地享受和参与开源。
