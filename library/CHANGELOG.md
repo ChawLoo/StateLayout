@@ -1,5 +1,8 @@
 # Changelog
 
+## [V1.1.1] 2024.05
+- 修改仓库地址为github
+
 ## [V1.1.0] 2024.05
 - 传新版本，重要升级，推翻了原有的设计，请重新仔细阅读README.md，该版本更简便
 - 夏天到了，原来的`StateLayoutComponent`太长了，所以我们名字减个肥，改成`StateLayout`
