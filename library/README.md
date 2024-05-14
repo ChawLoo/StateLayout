@@ -205,4 +205,4 @@ DevEco Studio NEXT Developer Beta1  (5.0.3.300), SDK: API11(4.1.0) 设备：Mate
 
 ## 开源协议
 
-本项目基于 [Apache-2.0](https://gitee.com/chawloo_organization/StateLayout/blob/master/library/LICENSE) ，请自由地享受和参与开源。
+本项目基于 [Apache-2.0](https://github.com/ChawLoo/StateLayout/blob/master/library/LICENSE) ，请自由地享受和参与开源。
