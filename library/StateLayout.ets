@@ -1,4 +1,7 @@
-import StateEventDispatcher from './src/main/ets/components/StateEventDispatcher'
+import StateConfig from './src/main/ets/components/StateConfig'
 
+let GlobalStateConfig = new StateConfig()
 
-export default StateEventDispatcher
+StateConfig.globalStateConfig = GlobalStateConfig
+
+export default GlobalStateConfig

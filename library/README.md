@@ -20,6 +20,7 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 
 | 属性               | 类型            | 描述          |
 |:-----------------|:--------------|:------------|
+| defaultState     | StateEnum     | 默认缺省页       |
 | loadingStr       | string        | 加载缺省页提示文本   |
 | progressColor    | ResourceColor | 加载缺省页进度条颜色  |
 | emptyStr         | string        | 空白缺省页提示文本   |
@@ -31,6 +32,7 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 | retryStr         | string        | 重试按钮文本      |
 
 ### 全局配置`globalStateConfig`配置接口
+ ⚠️ V1.1 版本已废弃删除这些方法，新增`GlobalStateConfig`直接静态赋值
 
 | 接口                                   | 描述                    |
 |:-------------------------------------|:----------------------|
@@ -45,19 +47,24 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 //在windowStageCreate中配置即可
 onWindowStageCreate(windowStage: window.WindowStage): void {
   //全局配置缺省页的各种图标和文案
-  StateConfig.globalStateConfig = new StateConfig()
-    .loadingConfig({
-      progressColor: Color.Red
-    })
-    .emptyConfig({
-      emptyStr: '我是全局配置的空白提示文案',
-      emptyIcon: $r('app.media.state_empty')
-    })
-  //也可以直接调用属性配置
-  StateConfig.globalStateConfig.retryStr = "立即重试"
-  });
+  GlobalStateConfig.progressColor = Color.Red
+  GlobalStateConfig.emptyStr = '我是全局配置的空白提示文案'
+  GlobalStateConfig.emptyIcon = $r('app.media.state_empty')
+  GlobalStateConfig.retryStr = '立即重试'
+  GlobalStateConfig.defaultState = StateEnum.LOADING
 }
 ```
+## 控制器 ·StateController`
+
+| 接口                               | 描述               |
+|:---------------------------------|:-----------------|
+| loading(LoadingConfig)           | 显示加载中(可单次配置)     |
+| empty(EmptyConfig)               | 显示空白缺省页(可单次配置)   |
+| error(ErrorConfig)               | 显示错误缺省页(可单次配置)   |
+| networkError(NetworkErrorConfig) | 显示网络错误缺省页(可单次配置) |
+| content()                        | 显示内容页            |
+
+
 ## 使用
 
 #### 简单用法
@@ -65,9 +72,9 @@ onWindowStageCreate(windowStage: window.WindowStage): void {
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World';
-  @State config: StateConfig = new StateConfig()
-  @State state: StateEnum = StateEnum.LOADING
+  controller: StateController = new StateController() //初始化StateController
+  @State message: string = 'Hello World'
+  
 
   aboutToAppear(): void {
     this.loading()
@@ -77,19 +84,18 @@ struct Index {
   loading() {
     const timerId = setInterval(() => {
       //简单设置状态
-      this.state = StateEnum.CONTENT
+      this.controller.content()
       clearInterval(timerId)
     }, 2000)
   }
 
   build() {
     Column() {
-      //添加缺省页组件
-      StateLayoutComponent({
-        state: this.state,
-        stateConfig: this.config,
+      //加入缺省页组件
+      StateLayout({
+        controller: this.controller,
         retry: () => {
-
+          this.loading()
         },
       }) {
         Text(`加载成功后的内容:::${this.message}`)
@@ -108,28 +114,14 @@ struct Index {
 }
 ```
 
-#### 进阶用法
-
-通过`StateEventDispatcher`来发送消息给子组件进行状态切换，StateLayoutComponent需要接受一个EventID来区分来自哪个界面
-
-| 方法             | 说明           |
-|:---------------|:-------------|
-| 构造方法           | 内部初始化EventID |
-| loading()      | 展示加载中页面      |
-| empty()        | 展示空白页面       |
-| error()        | 展示错误页面       |
-| content()      | 展示错误页面       |
-| networkError() | 展示网络错误页面     |
-
+#### 通过控制器调用切换缺省状态
 
 ```typescript
 @Entry
 @Component
 struct Index {
   @State message: string = 'Hello World';
-  @State config: StateConfig = new StateConfig()
-  @State state: StateEnum = StateEnum.LOADING
-  stateEvent = new StateEventDispatcher()
+  controller: StateController = new StateController()
 
   aboutToAppear(): void {
     this.loading()
@@ -138,7 +130,7 @@ struct Index {
   //模拟网络加载
   loading() {
     const timerId = setInterval(() => {
-      this.state = StateEnum.CONTENT
+      this.controller.content()
       clearInterval(timerId)
     }, 2000)
   }
@@ -157,34 +149,32 @@ struct Index {
         onSelected: (index) => {
           switch (index) {
             case 0:
-              this.state = StateEnum.LOADING
+              this.controller.loading
               break
             case 1:
-              this.config.emptyStr = '不一样的空白页文案' //修改后当前页面就一直是这个，除非再次修改
-              this.config.emptyIcon = $r('app.media.state_empty') //修改后当前页面就一直是这个，除非再次修改
-              this.stateEvent.empty()
+              this.controller.empty({
+                emptyStr: '不一样的空白页文案',
+                emptyIcon: $r('app.media.state_empty')
+              })
               break
             case 2:
-              this.config.retryStr = '给我重试' //修改后当前页面就一直是这个，除非再次修改
-              this.stateEvent.error()
+              this.controller.error({ retryStr: '给我重试' })
               break
             case 3:
-              this.stateEvent.networkError()
+              this.controller.networkError()
               break
             case 4:
-              this.stateEvent.content()
+              this.controller.content()
               break
           }
         },
         hidesBackButton: false
       })
-      StateLayoutComponent({
-        state: this.state,
-        stateConfig: this.config,
+      StateLayout({
+        controller: this.controller,
         retry: () => {
 
-        },
-        eventID: this.stateEvent.eventID
+        }
       }) {
         Text(`加载成功后的内容:::${this.message}`)
           .fontSize(30)
@@ -201,15 +191,10 @@ struct Index {
   }
 }
 ```
-
-## Feature
-
-整理调用方法来实现状态页切换同时，传入单次文案和图标。
-
 ## 约束与限制
 
 在下述版本验证通过：
-DevEco Studio NEXT Developer Beta1  (5.0.3.200), SDK: API11(4.1.0) 设备：Mate 60 Pro（Preview2）
+DevEco Studio NEXT Developer Beta1  (5.0.3.300), SDK: API11(4.1.0) 设备：Mate 60 Pro（Preview2）
 
 ## FAQ
 - 目前只是简单的设置，细节问题和更多功能正在研究和发掘开发，欢迎提交PR，共同进步

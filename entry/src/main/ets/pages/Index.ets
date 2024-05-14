@@ -1,16 +1,13 @@
-import { StateEnum } from 'StateLayout/src/main/ets/components/StateEnum';
 import { router, SelectTitleBar } from '@kit.ArkUI';
-import StateConfig from 'StateLayout/src/main/ets/components/StateConfig';
-import StateLayoutComponent from 'StateLayout/src/main/ets/components/StateLayoutComponent';
-import StateEventDispatcher from 'StateLayout/StateLayout';
+import StateLayout from 'StateLayout/src/main/ets/components/StateLayout';
+import StateController from 'StateLayout/src/main/ets/components/StateController';
 
 @Entry
 @Component
 struct Index {
+  controller: StateController = new StateController()
   @State message: string = 'Hello World';
-  @State config: StateConfig = new StateConfig()
-  @State state: StateEnum = StateEnum.LOADING
-  stateEvent = new StateEventDispatcher()
+  singleEmpty: boolean = false
 
   aboutToAppear(): void {
     this.loading()
@@ -19,7 +16,7 @@ struct Index {
   //模拟网络加载
   loading() {
     const timerId = setInterval(() => {
-      this.state = StateEnum.CONTENT
+      this.controller.content()
       clearInterval(timerId)
     }, 2000)
   }
@@ -38,34 +35,33 @@ struct Index {
         onSelected: (index) => {
           switch (index) {
             case 0:
-              this.state = StateEnum.LOADING
+              this.controller.loading()
               break
             case 1:
-              this.config.emptyStr = '不一样的空白页文案' //修改后当前页面就一直是这个，除非再次修改
-              this.config.emptyIcon = $r('app.media.state_empty') //修改后当前页面就一直是这个，除非再次修改
-              this.stateEvent.empty()
+              this.controller.empty({
+                emptyStr: !this.singleEmpty ? '我是单次显示修改后的空白缺省文案' : '',
+                emptyIcon: $r('app.media.state_empty')
+              })
+              this.singleEmpty = true
               break
             case 2:
-              this.config.retryStr = '给我重试' //修改后当前页面就一直是这个，除非再次修改
-              this.stateEvent.error()
+              this.controller.error({ retryStr: '给我重试' })
               break
             case 3:
-              this.stateEvent.networkError()
+              this.controller.networkError()
               break
             case 4:
-              this.stateEvent.content()
+              this.controller.content()
               break
           }
         },
         hidesBackButton: false
       })
-      StateLayoutComponent({
-        state: this.state,
-        stateConfig: this.config,
+      StateLayout({
+        controller: this.controller,
         retry: () => {
-
+          this.loading()
         },
-        eventID: this.stateEvent.eventID
       }) {
         Text(`加载成功后的内容:::${this.message}`)
           .fontSize(30)

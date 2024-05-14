@@ -1,28 +1,22 @@
-import StateConfig from 'StateLayout/src/main/ets/components/StateConfig';
-import { StateEnum } from 'StateLayout/src/main/ets/components/StateEnum';
-import StateLayoutComponent from 'StateLayout/src/main/ets/components/StateLayoutComponent';
-import StateEventDispatcher from 'StateLayout/StateLayout';
+import StateController from 'StateLayout/src/main/ets/components/StateController';
+import StateLayout from 'StateLayout/src/main/ets/components/StateLayout';
 
 @Entry
 @Component
 struct StateLayoutPage {
   @State message: string = 'Hello World';
-  @State state: StateEnum = StateEnum.CONTENT
-  @State config: StateConfig = new StateConfig()
-  stateEvent: StateEventDispatcher = new StateEventDispatcher()
+  stateController = new StateController()
 
   build() {
     Column() {
-      StateLayoutComponent({
-        state: this.state,
-        stateConfig: this.config,
-        eventID: this.stateEvent.eventID
+      StateLayout({
+        controller: this.stateController
       }) {
         Text(this.message)
           .fontSize(30)
         Button('发送子组件消息')
           .onClick(() => {
-            this.stateEvent.empty()
+            this.stateController.empty()
           })
       }
     }
