@@ -54,7 +54,7 @@ onWindowStageCreate(windowStage: window.WindowStage): void {
   GlobalStateConfig.defaultState = StateEnum.LOADING
 }
 ```
-## 控制器 ·StateController`
+## 控制器 `StateController`
 
 | 接口                               | 描述               |
 |:---------------------------------|:-----------------|
@@ -74,7 +74,7 @@ onWindowStageCreate(windowStage: window.WindowStage): void {
 struct Index {
   controller: StateController = new StateController() //初始化StateController
   @State message: string = 'Hello World'
-  
+
 
   aboutToAppear(): void {
     this.loading()
@@ -109,7 +109,7 @@ struct Index {
       }
     }
     .height('100%')
-    .width('100%')
+      .width('100%')
   }
 }
 ```
@@ -187,7 +187,7 @@ struct Index {
       }
     }
     .height('100%')
-    .width('100%')
+      .width('100%')
   }
 }
 ```

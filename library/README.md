@@ -54,7 +54,7 @@ onWindowStageCreate(windowStage: window.WindowStage): void {
   GlobalStateConfig.defaultState = StateEnum.LOADING
 }
 ```
-## 控制器 ·StateController`
+## 控制器 `StateController`
 
 | 接口                               | 描述               |
 |:---------------------------------|:-----------------|
