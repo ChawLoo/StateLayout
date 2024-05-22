@@ -9,21 +9,21 @@ function NothingBuilder() {
 
 @Component
 export default struct StateLayout {
+  showLoadingWhenRetry: boolean = StateConfig.globalStateConfig.showLoadingWhenRetry
   @State state: StateEnum = StateConfig.globalStateConfig.defaultState
-  @State localConfig: StateConfig = new StateConfig()
-  @State loadingStr: string = this.localConfig.loadingStr
-  @State progressColor: ResourceColor = this.localConfig.progressColor
-  @State emptyStr: string = this.localConfig.emptyStr
-  @State emptyIcon: Resource = this.localConfig.emptyIcon
-  @State errorStr: string = this.localConfig.errorStr
-  @State errorIcon: Resource = this.localConfig.errorIcon
-  @State retryStr: string = this.localConfig.retryStr
-  @State networkErrorStr: string = this.localConfig.networkErrorStr
-  @State networkErrorIcon: Resource = this.localConfig.networkErrorIcon
-  @BuilderParam public contentBuilder: () => void = NothingBuilder
-  retry: () => void = () => {
-  }
+  @State private loadingStr: string = StateConfig.globalStateConfig.loadingStr
+  @State private progressColor: ResourceColor = StateConfig.globalStateConfig.progressColor
+  @State private emptyStr: string = StateConfig.globalStateConfig.emptyStr
+  @State private emptyIcon: Resource = StateConfig.globalStateConfig.emptyIcon
+  @State private errorStr: string = StateConfig.globalStateConfig.errorStr
+  @State private errorIcon: Resource = StateConfig.globalStateConfig.errorIcon
+  @State private retryStr: string = StateConfig.globalStateConfig.retryStr
+  @State private networkErrorStr: string = StateConfig.globalStateConfig.networkErrorStr
+  @State private networkErrorIcon: Resource = StateConfig.globalStateConfig.networkErrorIcon
+  priorityRetry?: () => void // 优先加载，用于单次传入的retry
+  retry?: () => void
   controller: StateController = new StateController();
+  @BuilderParam public contentBuilder: () => void = NothingBuilder
 
   aboutToAppear(): void {
     if (this.controller) {
@@ -37,56 +37,78 @@ export default struct StateLayout {
 
   private loading = (config?: LoadingConfig) => {
     if (config?.loadingStr) {
-      this.loadingStr = isNotBlank(config.loadingStr) ? config.loadingStr : this.localConfig.loadingStr
+      this.loadingStr = isNotBlank(config.loadingStr) ? config.loadingStr : StateConfig.globalStateConfig.loadingStr
     }
     this.state = StateEnum.LOADING
   }
   private empty = (config?: EmptyConfig) => {
     if (config?.emptyStr) {
-      this.emptyStr = isNotBlank(config?.emptyStr) ? config?.emptyStr : this.localConfig.emptyStr
+      this.emptyStr = isNotBlank(config?.emptyStr) ? config?.emptyStr : StateConfig.globalStateConfig.emptyStr
     } else {
-      this.emptyStr = this.localConfig.emptyStr
+      this.emptyStr = StateConfig.globalStateConfig.emptyStr
     }
     if (config?.emptyIcon) {
-      this.emptyIcon = config?.emptyIcon ?? this.localConfig.emptyIcon
+      this.emptyIcon = config?.emptyIcon ?? StateConfig.globalStateConfig.emptyIcon
     } else {
-      this.emptyIcon = this.localConfig.emptyIcon
+      this.emptyIcon = StateConfig.globalStateConfig.emptyIcon
     }
     this.state = StateEnum.EMPTY
   }
   private error = (config?: ErrorConfig) => {
     if (config?.errorStr) {
-      this.errorStr = isNotBlank(config?.errorStr) ? config?.errorStr : this.localConfig.errorStr
+      this.errorStr = isNotBlank(config?.errorStr) ? config?.errorStr : StateConfig.globalStateConfig.errorStr
     } else {
-      this.errorStr = this.localConfig.errorStr
+      this.errorStr = StateConfig.globalStateConfig.errorStr
     }
     if (config?.errorIcon) {
-      this.errorIcon = config?.errorIcon ?? this.localConfig.errorIcon
+      this.errorIcon = config?.errorIcon ?? StateConfig.globalStateConfig.errorIcon
     } else {
-      this.errorIcon = this.localConfig.errorIcon
+      this.errorIcon = StateConfig.globalStateConfig.errorIcon
     }
     if (config?.retryStr) {
-      this.retryStr = isNotBlank(config?.retryStr) ? config?.retryStr : this.localConfig.retryStr
+      this.retryStr = isNotBlank(config?.retryStr) ? config?.retryStr : StateConfig.globalStateConfig.retryStr
     } else {
-      this.retryStr = this.localConfig.retryStr
+      this.retryStr = StateConfig.globalStateConfig.retryStr
+    }
+    this.priorityRetry = config?.retry
+    if (config?.retry) {
+      if (config?.isCoverRetry !== undefined && config.isCoverRetry) {
+        this.retry = config.retry
+      }
+    }
+    if (config?.showLoadingWhenRetry !== undefined) {
+      this.showLoadingWhenRetry = config.showLoadingWhenRetry
+    } else {
+      this.showLoadingWhenRetry = StateConfig.globalStateConfig.showLoadingWhenRetry
     }
     this.state = StateEnum.ERROR
   }
   private networkError = (config?: NetworkErrorConfig) => {
     if (config?.networkErrorStr) {
-      this.networkErrorStr = isNotBlank(config?.networkErrorStr) ? config?.networkErrorStr : this.localConfig.networkErrorStr
+      this.networkErrorStr = isNotBlank(config?.networkErrorStr) ? config?.networkErrorStr : StateConfig.globalStateConfig.networkErrorStr
     } else {
-      this.networkErrorStr = this.localConfig.networkErrorStr
+      this.networkErrorStr = StateConfig.globalStateConfig.networkErrorStr
     }
     if (config?.networkErrorIcon) {
-      this.networkErrorIcon = config?.networkErrorIcon ?? this.localConfig.networkErrorIcon
+      this.networkErrorIcon = config?.networkErrorIcon ?? StateConfig.globalStateConfig.networkErrorIcon
     } else {
-      this.networkErrorIcon = this.localConfig.networkErrorIcon
+      this.networkErrorIcon = StateConfig.globalStateConfig.networkErrorIcon
     }
     if (config?.retryStr) {
-      this.retryStr = isNotBlank(config?.retryStr) ? config?.retryStr : this.localConfig.retryStr
+      this.retryStr = isNotBlank(config?.retryStr) ? config?.retryStr : StateConfig.globalStateConfig.retryStr
     } else {
-      this.retryStr = this.localConfig.retryStr
+      this.retryStr = StateConfig.globalStateConfig.retryStr
+    }
+    this.priorityRetry = config?.retry
+    if (config?.retry) {
+      if (config?.isCoverRetry !== undefined && config.isCoverRetry) {
+        this.retry = config.retry
+      }
+    }
+    if (config?.showLoadingWhenRetry !== undefined) {
+      this.showLoadingWhenRetry = config.showLoadingWhenRetry
+    } else {
+      this.showLoadingWhenRetry = StateConfig.globalStateConfig.showLoadingWhenRetry
     }
     this.state = StateEnum.NETWORK_ERROR
   }
@@ -149,10 +171,16 @@ export default struct StateLayout {
       .fontColor(0xFF3369E7)
       .margin({ top: 10 })
       .onClick(() => {
-        if (this.state == StateEnum.ERROR) {
+        if (this.showLoadingWhenRetry && this.state != StateEnum.LOADING) {
           this.state = StateEnum.LOADING
         }
-        this.retry()
+        if (this.priorityRetry) {
+          this.priorityRetry()
+        } else {
+          if (this.retry) {
+            this.retry()
+          }
+        }
       })
   }
 
@@ -170,7 +198,16 @@ export default struct StateLayout {
       .fontColor(0xFF3369E7)
       .margin({ top: 10 })
       .onClick(() => {
-        this.retry()
+        if (this.showLoadingWhenRetry && this.state != StateEnum.LOADING) {
+          this.state = StateEnum.LOADING
+        }
+        if (this.priorityRetry) {
+          this.priorityRetry()
+        } else {
+          if (this.retry) {
+            this.retry()
+          }
+        }
       })
   }
 }

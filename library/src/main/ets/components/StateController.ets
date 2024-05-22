@@ -15,6 +15,5 @@ export default class StateController {
   }
   content = () => {
     console.log(`显示内容`);
-
   }
 }

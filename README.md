@@ -18,21 +18,22 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 ## 接口和属性列表
 ### `StateConfig`属性列表
 
-| 属性               | 类型            | 描述          |
-|:-----------------|:--------------|:------------|
-| defaultState     | StateEnum     | 默认缺省页       |
-| loadingStr       | string        | 加载缺省页提示文本   |
-| progressColor    | ResourceColor | 加载缺省页进度条颜色  |
-| emptyStr         | string        | 空白缺省页提示文本   |
-| emptyIcon        | string        | 空白缺省页图标     |
-| errorStr         | string        | 错误缺省页提示文本   |
-| errorIcon        | Resource      | 错误缺省页图标     |
-| networkErrorStr  | string        | 网络错误缺省页提示文本 |
-| networkErrorIcon | Resource      | 网络错误缺省页图标   |
-| retryStr         | string        | 重试按钮文本      |
+| 属性                   | 类型            | 默认值                              | 描述          |
+|:---------------------|:--------------|:---------------------------------|:------------|
+| defaultState         | StateEnum     | StateEnum.CONTENT                | 默认缺省页       |
+| showLoadingWhenRetry | boolean       | true                             | 重试自动显示加载中   |
+| loadingStr           | string        | '加载中...'                         | 加载缺省页提示文本   |
+| progressColor        | ResourceColor | #FF3369E7                        | 加载缺省页进度条颜色  |
+| emptyStr             | string        | '暂无数据'                           | 空白缺省页提示文本   |
+| emptyIcon            | string        | $r('app.media.ic_state_empty')   | 空白缺省页图标     |
+| errorStr             | string        | '加载失败'                           | 错误缺省页提示文本   |
+| errorIcon            | Resource      | $r('app.media.ic_state_error')   | 错误缺省页图标     |
+| networkErrorStr      | string        | '网络不稳定，请重试'                      | 网络错误缺省页提示文本 |
+| networkErrorIcon     | Resource      | $r('app.media.ic_state_network') | 网络错误缺省页图标   |
+| retryStr             | string        | '重新加载'                           | 重试按钮文本      |
 
 ### 全局配置`globalStateConfig`配置接口
-⚠️ V1.1 版本已废弃删除这些方法，新增`GlobalStateConfig`直接静态赋值
+⚠️ V1.1.0 版本已废弃删除这些方法，新增`globalStateConfig`直接静态赋值
 
 | 接口                                   | 描述                    |
 |:-------------------------------------|:----------------------|
@@ -42,16 +43,17 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 | networkErrConfig(NetworkErrorConfig) | 配置网络错误中的提示文案、图标和重试文本  |
 
 ## 全局配置
-可在任意地方配置，推荐`EntryAbility`中配置
+可在任意地方配置，推荐`EntryAbility`入口Ability中配置
 ```typescript
 //在windowStageCreate中配置即可
 onWindowStageCreate(windowStage: window.WindowStage): void {
   //全局配置缺省页的各种图标和文案
-  GlobalStateConfig.progressColor = Color.Red
-  GlobalStateConfig.emptyStr = '我是全局配置的空白提示文案'
-  GlobalStateConfig.emptyIcon = $r('app.media.state_empty')
-  GlobalStateConfig.retryStr = '立即重试'
-  GlobalStateConfig.defaultState = StateEnum.LOADING
+  GlobalStateConfig.progressColor = Color.Red// 设置加载中进度条的颜色
+  GlobalStateConfig.emptyStr = '我是全局配置的空白提示文案'// 设置空白文案
+  GlobalStateConfig.emptyIcon = $r('app.media.state_empty')// 设置空白Icon图标
+  GlobalStateConfig.retryStr = '立即重试'// 设置默认重试按钮文案（网络错误和错误共享）
+  GlobalStateConfig.defaultState = StateEnum.LOADING// 设置默认缺省页为加载中
+  GlobalStateConfig.showLoadingWhenRetry:boolean = false// 关闭点击重试按钮自动切换加载中
 }
 ```
 ## 控制器 `StateController`
@@ -64,6 +66,42 @@ onWindowStageCreate(windowStage: window.WindowStage): void {
 | networkError(NetworkErrorConfig) | 显示网络错误缺省页(可单次配置) |
 | content()                        | 显示内容页            |
 
+## 单次配置接口
+#### `LoadingConfig`
+
+| 配置项           | 类型            | 描述    |
+|:--------------|:--------------|:------|
+| loadingStr    | string        | 加载中文案 |
+| progressColor | ResourceColor | 进度条颜色 |
+
+#### `EmptyConfig`
+
+| 配置项       | 类型       | 描述   |
+|:----------|:---------|:-----|
+| emptyStr  | string   | 空白文案 |
+| emptyIcon | Resource | 空白图标 |
+
+#### `ErrorConfig`
+
+| 配置项                  | 类型       | 描述         |
+|:---------------------|:---------|:-----------|
+| errorStr             | string   | 空白文案       |
+| errorIcon            | Resource | 空白图标       |
+| retryStr             | string   | 重试文案       |
+| showLoadingWhenRetry | boolean  | 重试自动显示加载中  |
+| isCoverRetry         | boolean  | 是否覆盖原有重试事件 |
+| retry                | ()=>void | 重试事件       |
+
+#### `NetworkErrorConfig`
+
+| 配置项                  | 类型       | 描述         |
+|:---------------------|:---------|:-----------|
+| networkErrorStr      | string   | 网络错误文案     |
+| networkErrorIcon     | Resource | 网络错误图标     |
+| retryStr             | string   | 重试文案       |
+| showLoadingWhenRetry | boolean  | 重试自动显示加载中  |
+| isCoverRetry         | boolean  | 是否覆盖原有重试事件 |
+| retry                | ()=>void | 重试事件       |
 
 ## 使用
 
@@ -74,7 +112,7 @@ onWindowStageCreate(windowStage: window.WindowStage): void {
 struct Index {
   controller: StateController = new StateController() //初始化StateController
   @State message: string = 'Hello World'
-
+  
 
   aboutToAppear(): void {
     this.loading()
@@ -109,7 +147,7 @@ struct Index {
       }
     }
     .height('100%')
-      .width('100%')
+    .width('100%')
   }
 }
 ```
@@ -140,41 +178,97 @@ struct Index {
       SelectTitleBar({
         options: [
           { value: '加载中' },
-          { value: '空白页' },
+          { value: '空白页（全局文案和图标）' },
+          { value: '空白页（单例文案和图标）' },
           { value: '错误页' },
+          { value: '错误页（单例重试按钮和事件）' },
+          { value: '错误页（单例重试事件并覆盖）' },
           { value: '没有网络' },
+          { value: '没有网络（自动显示加载）' },
+          { value: '没有网络（不自动显示加载）' },
+          { value: '未登录' },
           { value: '加载成功' },
         ],
         selected: 0,
         onSelected: (index) => {
           switch (index) {
             case 0:
-              this.controller.loading
+              this.controller.loading()
               break
             case 1:
+              this.controller.empty()
+              break
+            case 2:
               this.controller.empty({
-                emptyStr: '不一样的空白页文案',
+                emptyStr: '我是单例空白文案',
                 emptyIcon: $r('app.media.state_empty')
               })
               break
-            case 2:
-              this.controller.error({ retryStr: '给我重试' })
-              break
             case 3:
-              this.controller.networkError()
+              this.controller.error()
               break
             case 4:
+              this.controller.error({
+                retryStr: '我是单例错误按钮',
+                errorStr: `我是单例错误文案`,
+                isCoverRetry: false, //不会覆盖
+                retry: () => {
+                  promptAction.showToast({ message: '我是单例重试事件' })
+                }
+              })
+              break
+            case 5:
+              this.controller.error({
+                retryStr: '给我重试',
+                errorStr: '单例重试事件，后续点击重试，执行覆盖的重试',
+                isCoverRetry: true, //覆盖原来的重试，普通的error和netError后，重试时间被覆盖
+                retry: () => {
+                  promptAction.showToast({ message: '我是覆盖的重试事件' })
+                }
+              })
+              break
+            case 6:
+              this.controller.networkError({
+                networkErrorStr: '网络错误（点击重试根据全局配置是否自动加载中）',
+              })
+              break
+            case 7:
+              this.controller.networkError({
+                networkErrorStr: '网络错误（点击重试自动显示加载中）',
+                showLoadingWhenRetry: true
+              })
+              break
+            case 8:
+              this.controller.networkError({
+                networkErrorStr: '网络错误（点击重试不会自动显示加载中）',
+                showLoadingWhenRetry: false
+              })
+              break
+            case 9:
+              this.controller.error({
+                errorStr: '未登录状态提示，等同于Error',
+                retryStr: '立即登录',
+                showLoadingWhenRetry: false,
+                retry: () => {
+                  promptAction.showToast({
+                    message: '跳转登录的点击事件'
+                  })
+                }
+              })
+              break
+            case 10:
               this.controller.content()
               break
           }
         },
-        hidesBackButton: false
+        hidesBackButton: true
       })
       StateLayout({
         controller: this.controller,
         retry: () => {
-
-        }
+          promptAction.showToast({ message: '我是最初重试事件' })
+          this.loading()
+        },
       }) {
         Text(`加载成功后的内容:::${this.message}`)
           .fontSize(30)
@@ -191,6 +285,9 @@ struct Index {
   }
 }
 ```
+## Feature
+目前感觉网络错误的状态和错误状态雷同，无非就是换了文案和图标，打算给他去掉
+
 ## 约束与限制
 
 在下述版本验证通过：

@@ -2,6 +2,7 @@ import { StateEnum } from './StateEnum'
 
 export default class StateConfig {
   static globalStateConfig: StateConfig = new StateConfig()
+  showLoadingWhenRetry: boolean = true
   defaultState: StateEnum = StateEnum.CONTENT
   loadingStr: string = '加载中...'
   progressColor: ResourceColor = '#FF3369E7'
@@ -15,6 +16,7 @@ export default class StateConfig {
 
   constructor() {
     if (StateConfig.globalStateConfig) {
+      this.showLoadingWhenRetry = StateConfig.globalStateConfig.showLoadingWhenRetry
       this.loadingStr = StateConfig.globalStateConfig.loadingStr
       this.progressColor = StateConfig.globalStateConfig.progressColor
       this.emptyStr = StateConfig.globalStateConfig.emptyStr
@@ -42,10 +44,16 @@ export declare interface ErrorConfig {
   errorStr?: string
   errorIcon?: Resource
   retryStr?: string
+  showLoadingWhenRetry?: boolean
+  isCoverRetry?: boolean
+  retry?: () => void
 }
 
 export declare interface NetworkErrorConfig {
   networkErrorStr?: string
   networkErrorIcon?: Resource
   retryStr?: string
+  showLoadingWhenRetry?: boolean
+  isCoverRetry?: boolean
+  retry?: () => void
 }

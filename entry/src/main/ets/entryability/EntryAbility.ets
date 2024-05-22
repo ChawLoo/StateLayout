@@ -21,8 +21,9 @@ export default class EntryAbility extends UIAbility {
     GlobalStateConfig.progressColor = Color.Red
     GlobalStateConfig.emptyStr = '我是全局配置的空白提示文案'
     GlobalStateConfig.emptyIcon = $r('app.media.state_empty')
-    GlobalStateConfig.retryStr = '立即重试'
+    GlobalStateConfig.retryStr = '我是全局重试按钮'
     GlobalStateConfig.defaultState = StateEnum.LOADING
+    GlobalStateConfig.showLoadingWhenRetry = false
 
     windowStage.loadContent('pages/Index', (err) => {
       if (err.code) {
