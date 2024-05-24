@@ -27,11 +27,11 @@ export default struct StateLayout {
 
   aboutToAppear(): void {
     if (this.controller) {
-      this.controller.loading = this.loading
-      this.controller.empty = this.empty
-      this.controller.error = this.error
-      this.controller.networkError = this.networkError
-      this.controller.content = this.content
+      this.controller.loadingEvent = this.loading
+      this.controller.emptyEvent = this.empty
+      this.controller.errorEvent = this.error
+      this.controller.networkErrorEvent = this.networkError
+      this.controller.contentEvent = this.content
     }
   }
 

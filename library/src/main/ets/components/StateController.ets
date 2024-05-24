@@ -1,19 +1,42 @@
 import { EmptyConfig, ErrorConfig, LoadingConfig, NetworkErrorConfig } from './StateConfig';
 
 export default class StateController {
-  loading = (config?: LoadingConfig) => {
-    console.log('显示加载');
+  loadingEvent?: (config?: LoadingConfig) => void
+
+  loading(config?: LoadingConfig) {
+    if (this.loadingEvent) {
+      this.loadingEvent(config)
+    }
   }
-  empty = (config?: EmptyConfig) => {
-    console.log('显示空白');
+
+  emptyEvent?: (config?: EmptyConfig) => void
+
+  empty(config?: EmptyConfig) {
+    if (this.emptyEvent) {
+      this.emptyEvent(config)
+    }
   }
-  error = (config?: ErrorConfig) => {
-    console.log(`显示错误${config}`);
+
+  errorEvent?: (config?: ErrorConfig) => void
+
+  error(config?: ErrorConfig) {
+    if (this.errorEvent) {
+      this.errorEvent(config)
+    }
   }
-  networkError = (config?: NetworkErrorConfig) => {
-    console.log(`显示网络错误${config}`);
+
+  networkErrorEvent?: (config?: NetworkErrorConfig) => void
+
+  networkError(config?: NetworkErrorConfig) {
+    if (this.networkErrorEvent) {
+      this.networkErrorEvent(config)
+    }
   }
-  content = () => {
-    console.log(`显示内容`);
+
+  contentEvent = () => {
+  }
+
+  content() {
+    this.contentEvent()
   }
 }
