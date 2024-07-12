@@ -2,7 +2,6 @@ import { promptAction, router, SelectTitleBar } from '@kit.ArkUI';
 import StateLayout from 'StateLayout/src/main/ets/components/StateLayout';
 import StateController from 'StateLayout/src/main/ets/components/StateController';
 
-
 @Entry
 @Component
 struct Index {
@@ -10,7 +9,7 @@ struct Index {
   @State message: string = 'Hello World';
 
   aboutToAppear(): void {
-    this.loading()
+    this.controller.content()
   }
 
   //模拟网络加载
