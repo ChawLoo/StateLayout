@@ -9,7 +9,7 @@ struct Index {
   @State message: string = 'Hello World';
 
   aboutToAppear(): void {
-    this.controller.content()
+    this.loading()
   }
 
   //模拟网络加载

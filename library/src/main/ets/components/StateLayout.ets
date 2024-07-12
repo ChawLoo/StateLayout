@@ -10,16 +10,16 @@ function NothingBuilder() {
 @Component
 export default struct StateLayout {
   showLoadingWhenRetry: boolean = StateConfig.globalStateConfig.showLoadingWhenRetry
-  @Prop state: StateEnum = StateConfig.globalStateConfig.defaultState
-  @Prop loadingStr: string = StateConfig.globalStateConfig.loadingStr
-  @Prop progressColor: ResourceColor = StateConfig.globalStateConfig.progressColor
-  @Prop emptyStr: string = StateConfig.globalStateConfig.emptyStr
-  @Prop emptyIcon: Resource = StateConfig.globalStateConfig.emptyIcon
-  @Prop errorStr: string = StateConfig.globalStateConfig.errorStr
-  @Prop errorIcon: Resource = StateConfig.globalStateConfig.errorIcon
-  @Prop retryStr: string = StateConfig.globalStateConfig.retryStr
-  @Prop networkErrorStr: string = StateConfig.globalStateConfig.networkErrorStr
-  @Prop networkErrorIcon: Resource = StateConfig.globalStateConfig.networkErrorIcon
+  @State state: StateEnum = StateConfig.globalStateConfig.defaultState
+  @State private loadingStr: string = StateConfig.globalStateConfig.loadingStr
+  @State private progressColor: ResourceColor = StateConfig.globalStateConfig.progressColor
+  @State private emptyStr: string = StateConfig.globalStateConfig.emptyStr
+  @State private emptyIcon: Resource = StateConfig.globalStateConfig.emptyIcon
+  @State private errorStr: string = StateConfig.globalStateConfig.errorStr
+  @State private errorIcon: Resource = StateConfig.globalStateConfig.errorIcon
+  @State private retryStr: string = StateConfig.globalStateConfig.retryStr
+  @State private networkErrorStr: string = StateConfig.globalStateConfig.networkErrorStr
+  @State private networkErrorIcon: Resource = StateConfig.globalStateConfig.networkErrorIcon
   priorityRetry?: () => void // 优先加载，用于单次传入的retry
   retry?: () => void
   controller: StateController = new StateController();
