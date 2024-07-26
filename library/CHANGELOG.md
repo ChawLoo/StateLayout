@@ -1,4 +1,7 @@
 # Changelog
+## [V2.0.0] 2024.07
+- 全面升级api12，不兼容老版本，@Component 升级为@ComponentV2,都用了V2版本，V1版本还是用V1.2.2吧
+- 会拉新分支，如果V1.2.2有问题会继续更新V1.2.3类推
 
 ## [V1.2.2] 2024.07
 - 放开原来的方案，将所有属性改为@Prop，可以外部@State传入进行修改，这样就全部手动了，用于解决绘制时序问题。https://github.com/ChawLoo/StateLayout/issues/1

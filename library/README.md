@@ -108,10 +108,10 @@ onWindowStageCreate(windowStage: window.WindowStage): void {
 #### 简单用法
 ```typescript
 @Entry
-@Component
+@ComponentV2
 struct Index {
   controller: StateController = new StateController() //初始化StateController
-  @State message: string = 'Hello World'
+  @Local message: string = 'Hello World'
   
 
   aboutToAppear(): void {
@@ -120,10 +120,9 @@ struct Index {
 
   //模拟网络加载
   loading() {
-    const timerId = setInterval(() => {
+    setTimeOut(() => {
       //简单设置状态
       this.controller.content()
-      clearInterval(timerId)
     }, 2000)
   }
 
@@ -156,9 +155,9 @@ struct Index {
 
 ```typescript
 @Entry
-@Component
+@ComponentV2
 struct Index {
-  @State message: string = 'Hello World';
+  @Local message: string = 'Hello World';
   controller: StateController = new StateController()
 
   aboutToAppear(): void {

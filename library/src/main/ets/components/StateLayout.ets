@@ -7,25 +7,25 @@ import { isNotBlank } from './Util'
 function NothingBuilder() {
 }
 
-@Component
+@ComponentV2
 export default struct StateLayout {
   showLoadingWhenRetry: boolean = StateConfig.globalStateConfig.showLoadingWhenRetry
-  @Prop state: StateEnum = StateConfig.globalStateConfig.defaultState
-  @Prop loadingStr: string = StateConfig.globalStateConfig.loadingStr
-  @Prop progressColor: ResourceColor = StateConfig.globalStateConfig.progressColor
-  @Prop emptyStr: string = StateConfig.globalStateConfig.emptyStr
-  @Prop emptyIcon: Resource = StateConfig.globalStateConfig.emptyIcon
-  @Prop errorStr: string = StateConfig.globalStateConfig.errorStr
-  @Prop errorIcon: Resource = StateConfig.globalStateConfig.errorIcon
-  @Prop retryStr: string = StateConfig.globalStateConfig.retryStr
-  @Prop networkErrorStr: string = StateConfig.globalStateConfig.networkErrorStr
-  @Prop networkErrorIcon: Resource = StateConfig.globalStateConfig.networkErrorIcon
+  @Local state: StateEnum = StateConfig.globalStateConfig.defaultState
+  @Local loadingStr: string = StateConfig.globalStateConfig.loadingStr
+  @Local progressColor: ResourceColor = StateConfig.globalStateConfig.progressColor
+  @Local emptyStr: string = StateConfig.globalStateConfig.emptyStr
+  @Local emptyIcon: Resource = StateConfig.globalStateConfig.emptyIcon
+  @Local errorStr: string = StateConfig.globalStateConfig.errorStr
+  @Local errorIcon: Resource = StateConfig.globalStateConfig.errorIcon
+  @Local retryStr: string = StateConfig.globalStateConfig.retryStr
+  @Local networkErrorStr: string = StateConfig.globalStateConfig.networkErrorStr
+  @Local networkErrorIcon: Resource = StateConfig.globalStateConfig.networkErrorIcon
   priorityRetry?: () => void // 优先加载，用于单次传入的retry
   retry?: () => void
   controller: StateController = new StateController();
   @BuilderParam public contentBuilder: () => void = NothingBuilder
 
-  aboutToAppear(): void {
+  onDidBuild(): void {
     if (this.controller) {
       this.controller.loadingEvent = this.loading
       this.controller.emptyEvent = this.empty

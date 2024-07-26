@@ -2,9 +2,9 @@ import StateController from 'StateLayout/src/main/ets/components/StateController
 import StateLayout from 'StateLayout/src/main/ets/components/StateLayout';
 
 @Entry
-@Component
+@ComponentV2
 struct StateLayoutPage {
-  @State message: string = 'Hello World';
+  @Local message: string = 'Hello World';
   stateController = new StateController()
 
   build() {

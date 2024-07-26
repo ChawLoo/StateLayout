@@ -3,20 +3,19 @@ import StateLayout from 'StateLayout/src/main/ets/components/StateLayout';
 import StateController from 'StateLayout/src/main/ets/components/StateController';
 
 @Entry
-@Component
+@ComponentV2
 struct Index {
   controller: StateController = new StateController()
-  @State message: string = 'Hello World';
+  @Local message: string = 'Hello World';
 
-  aboutToAppear(): void {
-    this.controller.content()
+  onDidBuild(): void {
+    this.loading()
   }
 
   //模拟网络加载
   loading() {
-    const timerId = setInterval(() => {
+    setTimeout(() => {
       this.controller.content()
-      clearInterval(timerId)
     }, 2000)
   }
 
@@ -36,7 +35,6 @@ struct Index {
           { value: '未登录' },
           { value: '加载成功' },
         ],
-        selected: 0,
         onSelected: (index) => {
           switch (index) {
             case 0:
