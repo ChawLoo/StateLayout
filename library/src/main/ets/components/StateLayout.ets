@@ -9,7 +9,7 @@ function NothingBuilder() {
 
 @ComponentV2
 export default struct StateLayout {
-  showLoadingWhenRetry: boolean = StateConfig.globalStateConfig.showLoadingWhenRetry
+  @Local showLoadingWhenRetry: boolean = StateConfig.globalStateConfig.showLoadingWhenRetry
   @Local localState: StateEnum = StateConfig.globalStateConfig.defaultState
   @Param state: StateEnum = StateConfig.globalStateConfig.defaultState
   @Local localLoadingStr: string = StateConfig.globalStateConfig.loadingStr
@@ -21,9 +21,9 @@ export default struct StateLayout {
   @Local localRetryStr: string = StateConfig.globalStateConfig.retryStr
   @Local localNetworkErrorStr: string = StateConfig.globalStateConfig.networkErrorStr
   @Local localNetworkErrorIcon: Resource = StateConfig.globalStateConfig.networkErrorIcon
-  priorityRetry?: () => void // 优先加载，用于单次传入的retry
-  retry?: () => void
-  controller: StateController = new StateController();
+  @Event priorityRetry?: () => void // 优先加载，用于单次传入的retry
+  @Event retry: () => void
+  @Param controller: StateController = new StateController();
   @BuilderParam public contentBuilder: () => void = NothingBuilder
 
   @Monitor('state')
