@@ -115,7 +115,7 @@ struct Index {
           this.loading()
         },
       }) {
-        Text(`加载成功后的内容:::${this.message}`)
+        Text(`加载成功后的内容:::${this.message}(点击文案跳转直接修改的方案)`)
           .fontSize(30)
           .fontColor(Color.Black)
           .onClick(() => {
