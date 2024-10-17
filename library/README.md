@@ -296,7 +296,7 @@ struct Index {
 ## 约束与限制
 
 在下述版本验证通过：
-DevEco Studio NEXT Developer Beta1  (5.0.3.300), SDK: API11(4.1.0) 设备：Mate 60 Pro（Preview2）
+DevEco Studio NEXT Release  (5.0.3.900), SDK: API12(5.0.0) 设备：Mate 60 Pro（Release）
 
 ## FAQ
 - 目前只是简单的设置，细节问题和更多功能正在研究和发掘开发，欢迎提交PR，共同进步

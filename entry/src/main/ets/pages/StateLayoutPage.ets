@@ -1,5 +1,4 @@
-import { StateEnum } from 'StateLayout/src/main/ets/components/StateEnum';
-import StateLayout from 'StateLayout/src/main/ets/components/StateLayout';
+import { StateEnum, StateLayout } from '@chawloo/state-layout';
 
 @Entry
 @ComponentV2

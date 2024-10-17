@@ -1,6 +1,6 @@
 {
   "name": "@chawloo/state-layout",
-  "version": "2.0.2",
+  "version": "2.0.3-alpha.1",
   "description": "一款在HarmonyOS Next上自由切换缺省状态的的框架，你值得拥有",
   "keywords": [
     "缺省页",
@@ -10,7 +10,7 @@
     "StateLayout",
     "MultiState"
   ],
-  "main": "StateLayout.ets",
+  "main": "Index.ets",
   "author": "ChawLoo",
   "license": "Apache-2.0",
   "homepage": "https://github.com/ChawLoo/StateLayout",

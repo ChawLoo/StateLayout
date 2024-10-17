@@ -1,6 +1,6 @@
 import { EmptyConfig, ErrorConfig, LoadingConfig, NetworkErrorConfig } from './StateConfig';
 
-export default class StateController {
+export class StateController {
   loadingEvent?: (config?: LoadingConfig) => void
 
   loading(config?: LoadingConfig) {

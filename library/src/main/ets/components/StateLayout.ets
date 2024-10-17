@@ -1,6 +1,6 @@
 import StateConfig, { EmptyConfig, ErrorConfig, LoadingConfig, NetworkErrorConfig } from './StateConfig'
 import { StateEnum } from './StateEnum'
-import StateController from './StateController'
+import { StateController } from './StateController'
 import { isNotBlank } from './Util'
 
 @Builder
@@ -8,7 +8,7 @@ function NothingBuilder() {
 }
 
 @ComponentV2
-export default struct StateLayout {
+export struct StateLayout {
   @Local showLoadingWhenRetry: boolean = StateConfig.globalStateConfig.showLoadingWhenRetry
   @Local localState: StateEnum = StateConfig.globalStateConfig.defaultState
   @Param state: StateEnum = StateConfig.globalStateConfig.defaultState

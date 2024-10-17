@@ -1,8 +1,7 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import GlobalStateConfig from 'StateLayout/StateLayout';
-import { StateEnum } from 'StateLayout/src/main/ets/components/StateEnum';
+import GlobalStateConfig, { StateEnum } from '@chawloo/state-layout';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
