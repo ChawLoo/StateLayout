@@ -1,6 +1,6 @@
 # Changelog
 
-## [V2.0.3] 2024.10
+## [V2.0.3-alpha.1] 2024.10
 - 先行版本，该版本会让整个导包需要替换一下，纠结的可以不升级
 - 修改导出逻辑，减少引入处的代码
 - 例如：import StateLayout from '@chawloo/state-layout/src/main/ets/components/StateLayout'[旧版]
