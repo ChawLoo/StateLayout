@@ -1,7 +1,7 @@
 # Changelog
 
 ## [V2.1.0] 2024.10
-- 新增功能不升级该版本不影响使用
+- 新增功能不升级该版本不影响使用 https://github.com/ChawLoo/StateLayout/issues/2
 - 新增全局Builder去配置缺省页(⚠️⚠️注意全局Builder有一定的局限性)
 - 如有需要，可以增加一个json字符串，在对应Builder中解析获取
 - 目前仅更新V2版本功能，如需请提issue，或者提PR
