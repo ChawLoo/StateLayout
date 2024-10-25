@@ -19,9 +19,9 @@ ohpm i @chawloo/state-layout
 | V2.0.2 | V2版本，用的都是@ComponentV2、@Local、@Param等 |
 
 ## 尝鲜版本(时间精力有限，故暂不考虑对V1进行尝鲜功能升级)
-| 版本            | 说明                    |
-|:--------------|:----------------------|
-| V2.1.0-bean.1 | 新增全局Builder功能，具体看更新说明 |
+| 版本     | 说明                    |
+|:-------|:----------------------|
+| V2.1.0 | 新增全局Builder功能，具体看更新说明 |
 
 
 OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmony ohpm 包](https://gitee.com/openharmony-tpc/docs/blob/master/OpenHarmony_har_usage.md)
