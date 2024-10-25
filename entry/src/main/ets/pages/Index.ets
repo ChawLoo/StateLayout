@@ -34,6 +34,7 @@ struct Index {
           { value: '未登录' },
           { value: '加载成功' },
         ],
+        subtitle: '如果设置了全局Builder,则完全自定义',
         onSelected: (index) => {
           switch (index) {
             case 0:

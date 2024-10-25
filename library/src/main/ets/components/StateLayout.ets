@@ -2,6 +2,7 @@ import StateConfig, { EmptyConfig, ErrorConfig, LoadingConfig, NetworkErrorConfi
 import { StateEnum } from './StateEnum'
 import { StateController } from './StateController'
 import { isNotBlank } from './Util'
+import GlobalStateConfig from '../../../../Index'
 
 @Builder
 function NothingBuilder() {
@@ -125,13 +126,47 @@ export struct StateLayout {
   build() {
     Column() {
       if (this.localState == StateEnum.LOADING) {
-        this.DefaultLoadingBuilder()
+        if (GlobalStateConfig.globalLoadingBuilder) {
+          GlobalStateConfig.globalLoadingBuilder.builder({
+            loadingStr: this.localLoadingStr,
+            progressColor: this.localProgressColor
+          })
+        } else {
+          this.DefaultLoadingBuilder()
+        }
       } else if (this.localState == StateEnum.EMPTY) {
-        this.DefaultEmptyBuilder()
+        if (GlobalStateConfig.globalEmptyBuilder) {
+          GlobalStateConfig.globalEmptyBuilder.builder({
+            emptyStr: this.localEmptyStr,
+            emptyIcon: this.localEmptyIcon
+          })
+        } else {
+          this.DefaultEmptyBuilder()
+        }
       } else if (this.localState == StateEnum.ERROR) {
-        this.DefaultErrorBuilder()
+        if (GlobalStateConfig.globalErrorBuilder) {
+          GlobalStateConfig.globalErrorBuilder.builder({
+            errorStr: this.localErrorStr,
+            errorIcon: this.localErrorIcon,
+            retryStr: this.localRetryStr,
+            retry: this.priorityRetry ?? this.retry,
+            showLoadingWhenRetry: this.showLoadingWhenRetry
+          })
+        } else {
+          this.DefaultErrorBuilder()
+        }
       } else if (this.localState == StateEnum.NETWORK_ERROR) {
-        this.DefaultNetworkErrorBuilder()
+        if (GlobalStateConfig.globalNetworkBuilder) {
+          GlobalStateConfig.globalNetworkBuilder.builder({
+            networkErrorStr: this.localNetworkErrorStr,
+            networkErrorIcon: this.localNetworkErrorIcon,
+            retryStr: this.localRetryStr,
+            retry: this.priorityRetry ?? this.retry,
+            showLoadingWhenRetry: this.showLoadingWhenRetry
+          })
+        } else {
+          this.DefaultNetworkErrorBuilder()
+        }
       } else {
         this.contentBuilder()
       }

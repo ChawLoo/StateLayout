@@ -12,11 +12,16 @@
 ```
 ohpm i @chawloo/state-layout
 ```
-## 版本
+## 稳定版本
 | 版本     | 说明                                   |
 |:-------|:-------------------------------------|
 | V1.2.2 | V1版本，用的都是@Component、@State、@Link等    |
 | V2.0.2 | V2版本，用的都是@ComponentV2、@Local、@Param等 |
+
+## 尝鲜版本(时间精力有限，故暂不考虑对V1进行尝鲜功能升级)
+| 版本            | 说明                    |
+|:--------------|:----------------------|
+| V2.1.0-bean.1 | 新增全局Builder功能，具体看更新说明 |
 
 
 OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmony ohpm 包](https://gitee.com/openharmony-tpc/docs/blob/master/OpenHarmony_har_usage.md)
@@ -51,8 +56,8 @@ OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmon
 ## 全局配置
 可在任意地方配置，推荐`EntryAbility`入口Ability中配置
 ```typescript
-//在windowStageCreate中配置即可
-onWindowStageCreate(windowStage: window.WindowStage): void {
+//在onCreate中配置即可
+onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
   //全局配置缺省页的各种图标和文案
   GlobalStateConfig.progressColor = Color.Red// 设置加载中进度条的颜色
   GlobalStateConfig.emptyStr = '我是全局配置的空白提示文案'// 设置空白文案
@@ -62,6 +67,25 @@ onWindowStageCreate(windowStage: window.WindowStage): void {
   GlobalStateConfig.showLoadingWhenRetry:boolean = false// 关闭点击重试按钮自动切换加载中
 }
 ```
+### V2.1.0-beta.1 新增内容
+在EntryAbility中配置全局Builder，去自定义缺省页的内容,仍然支持emptyConfig
+```typescript
+@Builder
+function GlobalEmptyBuilder(emptyConfig?: EmptyConfig) {
+  Text(`我是全局配置的EmptyBuilder:::${emptyConfig?.emptyStr}`)
+}
+
+export default class EntryAbility extends UIAbility{
+  //····省略其他内容
+  //在配置GlobalStateConfig的地方配置，我是放在onCreate
+  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    //···其他配置
+    GlobalStateConfig.globalEmptyBuilder = wrapBuilder(GlobalEmptyBuilder)
+  }
+}
+```
+
+
 ## 控制器 `StateController`
 
 | 接口                               | 描述               |

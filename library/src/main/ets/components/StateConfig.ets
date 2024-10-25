@@ -13,6 +13,10 @@ export default class StateConfig {
   networkErrorStr: string = '网络不稳定，请重试'
   networkErrorIcon: Resource = $r('app.media.ic_state_network')
   retryStr: string = '重新加载'
+  globalLoadingBuilder: WrappedBuilder<[LoadingConfig]> | undefined = undefined
+  globalEmptyBuilder: WrappedBuilder<[EmptyConfig]> | undefined = undefined
+  globalErrorBuilder: WrappedBuilder<[ErrorConfig]> | undefined = undefined
+  globalNetworkBuilder: WrappedBuilder<[NetworkErrorConfig]> | undefined = undefined
 
   constructor() {
     if (StateConfig.globalStateConfig) {

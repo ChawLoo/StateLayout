@@ -1,6 +1,6 @@
 {
   "name": "@chawloo/state-layout",
-  "version": "2.0.3-alpha.1",
+  "version": "2.1.0",
   "description": "一款在HarmonyOS Next上自由切换缺省状态的的框架，你值得拥有",
   "keywords": [
     "缺省页",
