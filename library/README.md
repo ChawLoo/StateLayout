@@ -68,7 +68,7 @@ onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
 }
 ```
 ### V2.1.0-beta.1 新增内容
-在EntryAbility中配置全局Builder，去自定义缺省页的内容,仍然支持emptyConfig
+在EntryAbility中配置全局Builder，去自定义缺省页的内容,仍然支持emptyConfig,也可以不用理会这个入参，因为全局Builder必须有入参
 ```typescript
 @Builder
 function GlobalEmptyBuilder(emptyConfig?: EmptyConfig) {
