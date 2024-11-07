@@ -2,7 +2,7 @@
 
 ## 简介
 
-[StateLayout](https://github.com/ChawLoo/StateLayout.git) ，是一个针对HarmonyOS Next系统开发的沉浸式框架，采用官方底层API，简单、实用、高效。
+[StateLayout](https://github.com/ChawLoo/StateLayout.git) ，是一个针对HarmonyOS Next系统开发的缺省页框架，简单、实用、高效。
 
 - 根据状态显示对应状态页面
 - 可以全局配置状态页样式
@@ -67,7 +67,7 @@ onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
   GlobalStateConfig.showLoadingWhenRetry:boolean = false// 关闭点击重试按钮自动切换加载中
 }
 ```
-### V2.1.0-beta.1 新增内容
+### V2.1.0 新增内容
 在EntryAbility中配置全局Builder，去自定义缺省页的内容,仍然支持emptyConfig,也可以不用理会这个入参，因为全局Builder必须有入参
 ```typescript
 @Builder
@@ -87,6 +87,7 @@ export default class EntryAbility extends UIAbility{
 
 
 ## 控制器 `StateController`
+重要的写前面，机制问题，建议在onAppear()方法中用控制器切换缺省页，如果放在aboutToAppear()或其他过早生命周期里面的话，会因为绘制时序问题导致切换失败
 
 | 接口                               | 描述               |
 |:---------------------------------|:-----------------|
