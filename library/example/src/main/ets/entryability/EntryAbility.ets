@@ -1,11 +1,24 @@
 import { AbilityConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
-import GlobalStateConfig from 'StateLayout/StateLayout';
-import { StateEnum } from 'StateLayout/src/main/ets/components/StateEnum';
+import GlobalStateConfig, { EmptyConfig, StateEnum } from '@chawloo/state-layout';
+
+@Builder
+function GlobalEmptyBuilder(emptyConfig?: EmptyConfig) {
+  Text(`我是全局配置的EmptyBuilder:::${emptyConfig?.emptyStr}`)
+}
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    //全局配置缺省页的各种图标和文案
+    GlobalStateConfig.progressColor = Color.Red
+    GlobalStateConfig.emptyStr = '我是全局配置的空白提示文案'
+    GlobalStateConfig.emptyIcon = $r('app.media.state_empty')
+    GlobalStateConfig.retryStr = '我是全局重试按钮'
+    GlobalStateConfig.defaultState = StateEnum.LOADING
+    GlobalStateConfig.showLoadingWhenRetry = false
+
+    GlobalStateConfig.globalEmptyBuilder = wrapBuilder(GlobalEmptyBuilder)
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
   }
 
@@ -16,13 +29,6 @@ export default class EntryAbility extends UIAbility {
   onWindowStageCreate(windowStage: window.WindowStage): void {
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
-
-    //全局配置缺省页的各种图标和文案
-    GlobalStateConfig.progressColor = Color.Red
-    GlobalStateConfig.emptyStr = '我是全局配置的空白提示文案'
-    GlobalStateConfig.emptyIcon = $r('app.media.state_empty')
-    GlobalStateConfig.retryStr = '立即重试'
-    GlobalStateConfig.defaultState = StateEnum.LOADING
 
     windowStage.loadContent('pages/Index', (err) => {
       if (err.code) {

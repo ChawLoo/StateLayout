@@ -6,7 +6,7 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "StateLayout": "file:../library"
+    "@chawloo/state-layout": "file:../library"
   }
 }
 

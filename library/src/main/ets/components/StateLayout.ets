@@ -32,7 +32,7 @@ export struct StateLayout {
     this.localState = this.state
   }
 
-  onDidBuild(): void {
+  aboutToAppear(): void {
     if (this.controller) {
       this.controller.loadingEvent = this.loading
       this.controller.emptyEvent = this.empty
@@ -126,54 +126,81 @@ export struct StateLayout {
   build() {
     Column() {
       if (this.localState == StateEnum.LOADING) {
-        if (GlobalStateConfig.globalLoadingBuilder) {
-          GlobalStateConfig.globalLoadingBuilder.builder({
-            loadingStr: this.localLoadingStr,
-            progressColor: this.localProgressColor
-          })
-        } else {
-          this.DefaultLoadingBuilder()
+        Column() {
+          if (GlobalStateConfig.globalLoadingBuilder) {
+            GlobalStateConfig.globalLoadingBuilder.builder({
+              loadingStr: this.localLoadingStr,
+              progressColor: this.localProgressColor
+            })
+          } else {
+            this.DefaultLoadingBuilder()
+          }
         }
+        .justifyContent(FlexAlign.Center)
+        .alignItems(HorizontalAlign.Center)
+        .width('100%')
+        .layoutWeight(1)
       } else if (this.localState == StateEnum.EMPTY) {
-        if (GlobalStateConfig.globalEmptyBuilder) {
-          GlobalStateConfig.globalEmptyBuilder.builder({
-            emptyStr: this.localEmptyStr,
-            emptyIcon: this.localEmptyIcon
-          })
-        } else {
-          this.DefaultEmptyBuilder()
+        Column() {
+          if (GlobalStateConfig.globalEmptyBuilder) {
+            GlobalStateConfig.globalEmptyBuilder.builder({
+              emptyStr: this.localEmptyStr,
+              emptyIcon: this.localEmptyIcon
+            })
+          } else {
+            this.DefaultEmptyBuilder()
+          }
         }
+        .justifyContent(FlexAlign.Center)
+        .alignItems(HorizontalAlign.Center)
+        .width('100%')
+        .layoutWeight(1)
       } else if (this.localState == StateEnum.ERROR) {
-        if (GlobalStateConfig.globalErrorBuilder) {
-          GlobalStateConfig.globalErrorBuilder.builder({
-            errorStr: this.localErrorStr,
-            errorIcon: this.localErrorIcon,
-            retryStr: this.localRetryStr,
-            retry: this.priorityRetry ?? this.retry,
-            showLoadingWhenRetry: this.showLoadingWhenRetry
-          })
-        } else {
-          this.DefaultErrorBuilder()
+        Column() {
+          if (GlobalStateConfig.globalErrorBuilder) {
+            GlobalStateConfig.globalErrorBuilder.builder({
+              errorStr: this.localErrorStr,
+              errorIcon: this.localErrorIcon,
+              retryStr: this.localRetryStr,
+              retry: this.priorityRetry ?? this.retry,
+              showLoadingWhenRetry: this.showLoadingWhenRetry
+            })
+          } else {
+            this.DefaultErrorBuilder()
+          }
         }
+        .width('100%')
+        .justifyContent(FlexAlign.Center)
+        .alignItems(HorizontalAlign.Center)
+        .layoutWeight(1)
       } else if (this.localState == StateEnum.NETWORK_ERROR) {
-        if (GlobalStateConfig.globalNetworkBuilder) {
-          GlobalStateConfig.globalNetworkBuilder.builder({
-            networkErrorStr: this.localNetworkErrorStr,
-            networkErrorIcon: this.localNetworkErrorIcon,
-            retryStr: this.localRetryStr,
-            retry: this.priorityRetry ?? this.retry,
-            showLoadingWhenRetry: this.showLoadingWhenRetry
-          })
-        } else {
-          this.DefaultNetworkErrorBuilder()
+        Column() {
+          if (GlobalStateConfig.globalNetworkBuilder) {
+            GlobalStateConfig.globalNetworkBuilder.builder({
+              networkErrorStr: this.localNetworkErrorStr,
+              networkErrorIcon: this.localNetworkErrorIcon,
+              retryStr: this.localRetryStr,
+              retry: this.priorityRetry ?? this.retry,
+              showLoadingWhenRetry: this.showLoadingWhenRetry
+            })
+          } else {
+            this.DefaultNetworkErrorBuilder()
+          }
         }
+        .width('100%')
+        .justifyContent(FlexAlign.Center)
+        .alignItems(HorizontalAlign.Center)
+        .layoutWeight(1)
       } else {
-        this.contentBuilder()
+        Column() {
+          this.contentBuilder()
+        }
+        .width('100%')
+        .layoutWeight(1)
       }
     }
-    .alignItems(HorizontalAlign.Center)
-    .justifyContent(FlexAlign.Center)
-    .layoutWeight(1)
+    .width('100%')
+    .height('100%')
   }
 
   @Builder

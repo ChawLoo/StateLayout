@@ -1,26 +1,41 @@
-import StateController from 'StateLayout/src/main/ets/components/StateController';
-import StateLayout from 'StateLayout/src/main/ets/components/StateLayout';
+import { StateEnum, StateLayout } from '@chawloo/state-layout';
 
 @Entry
-@Component
+@ComponentV2
 struct StateLayoutPage {
-  @State message: string = 'Hello World';
-  stateController = new StateController()
+  @Local message: string = 'Hello World';
+  @Local state: StateEnum = StateEnum.EMPTY //很神奇，本地默认的值居然比不过全局默认状态
+
+  @Builder
+  contentBuilder() {
+    Text(this.message)
+      .fontSize(30)
+  }
+
+  onDidBuild(): void {
+    setTimeout(() => {
+      this.state = StateEnum.ERROR
+    }, 1000)
+  }
 
   build() {
     Column() {
       StateLayout({
-        controller: this.stateController
-      }) {
-        Text(this.message)
-          .fontSize(30)
-        Button('发送子组件消息')
-          .onClick(() => {
-            this.stateController.empty()
-          })
-      }
+        state: this.state,
+        contentBuilder: () => {
+          this.contentBuilder()
+        }
+      })
+        .layoutWeight(1)
+        .width('100%')
+
+      Button('改变状态')
+        .onClick(() => {
+          this.state = StateEnum.LOADING
+          setTimeout(() => {
+            this.state = StateEnum.CONTENT
+          }, 2000)
+        })
     }
-    .height('100%')
-    .width('100%')
   }
 }
