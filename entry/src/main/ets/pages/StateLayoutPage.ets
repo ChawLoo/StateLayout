@@ -20,14 +20,15 @@ struct StateLayoutPage {
 
   build() {
     Column() {
-      StateLayout({
-        state: this.state,
-        contentBuilder: () => {
-          this.contentBuilder()
-        }
-      })
-        .layoutWeight(1)
-        .width('100%')
+      Row() {
+        StateLayout({
+          state: this.state,
+          contentBuilder: () => {
+            this.contentBuilder()
+          }
+        })
+      }
+      .layoutWeight(1)
 
       Button('改变状态')
         .onClick(() => {
@@ -37,5 +38,7 @@ struct StateLayoutPage {
           }, 2000)
         })
     }
+    .height('100%')
+    .width('100%')
   }
 }

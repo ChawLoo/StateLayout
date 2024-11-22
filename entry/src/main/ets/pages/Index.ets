@@ -108,29 +108,30 @@ struct Index {
         },
         hidesBackButton: true
       })
-      StateLayout({
-        controller: this.controller,
-        retry: () => {
-          promptAction.showToast({ message: '我是最初重试事件' })
-          this.loading()
-        },
-      }) {
-        Column() {
-          Text(`加载成功后的内容:::${this.message}(点击文案跳转直接修改的方案)`)
-            .fontSize(30)
-            .fontColor(Color.Black)
-            .onClick(() => {
-              router.pushUrl({
-                url: "pages/StateLayoutPage"
+      Row() {
+        StateLayout({
+          controller: this.controller,
+          retry: () => {
+            promptAction.showToast({ message: '我是最初重试事件' })
+            this.loading()
+          },
+        }) {
+          Column() {
+            Text(`加载成功后的内容:::${this.message}(点击文案跳转直接修改的方案)`)
+              .fontSize(30)
+              .fontColor(Color.Black)
+              .onClick(() => {
+                router.pushUrl({
+                  url: "pages/StateLayoutPage"
+                })
               })
-            })
+          }
+          .justifyContent(FlexAlign.Center)
+          .alignItems(HorizontalAlign.Center)
+          .width('100%')
         }
-        .justifyContent(FlexAlign.Center)
-        .alignItems(HorizontalAlign.Center)
-        .width('100%')
-        .height('100%')
-        .layoutWeight(1)
       }
+      .layoutWeight(1)
     }
     .height('100%')
     .width('100%')
