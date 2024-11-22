@@ -26,6 +26,11 @@ export struct StateLayout {
   @Event retry: () => void
   @Param controller: StateController = new StateController();
   @BuilderParam public contentBuilder: () => void = NothingBuilder
+  /**
+   * 2024年11月22日新增V2.2.1版本新增，用于根据缺省状态切换居中显示还是Start，
+   * Start的原因是如果StateLayout下的content是List，且List的条目不满一屏，会导致居中显示，顾动态调整
+   * 但由于API限制，只能采用alignSelf 需要外层套一层Row
+   */
   @Local isCenter: boolean = true
 
   @Monitor('state')

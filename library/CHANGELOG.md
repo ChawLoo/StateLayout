@@ -1,6 +1,14 @@
 # Changelog
 
+## [V2.2.1] 2024.11
+
+- 优化页面展示效果，移除StateLayout最外层的宽高100%，使其本身自适应高度，除了content的缺省页均最小高度并居中，根据状态动态化切换居中和垂直Start
+- ⚠️⚠️建议StateLayout外包一层Row，因为使用了alignSelf动态化切换Center和Start，感觉没啥更好的处理方式了，要么宽高100%，然后其父组件写死高度，否则一样会被撑开
+- 如有更好的方案，欢迎提[PR](https://github.com/ChawLoo/StateLayout/pulls)
+- 详情可以看源码
+
 ## [V2.2.0] 2024.11
+
 - 优化页面效果，详情可以直接打开代码，没有混淆，展示效果可以看demo，拉下来跑一下就行
 - 每一个缺省状态外层包裹Column并且居中
 - 内容Builder也包裹，撑满但从上面开始
@@ -8,12 +16,14 @@
 - feature：刷新组件，结合状态组件正在试点中，敬请期待
 
 ## [V2.1.0] 2024.10
+
 - 新增功能不升级该版本不影响使用 https://github.com/ChawLoo/StateLayout/issues/2
 - 新增全局Builder去配置缺省页(⚠️⚠️注意全局Builder有一定的局限性)
 - 如有需要，可以增加一个json字符串，在对应Builder中解析获取
 - 目前仅更新V2版本功能，如需请提issue，或者提PR
 
 ## [V2.0.3-alpha.1] 2024.10
+
 - 先行版本，该版本会让整个导包需要替换一下，纠结的可以不升级
 - 修改导出逻辑，减少引入处的代码
 - 例如：import StateLayout from '@chawloo/state-layout/src/main/ets/components/StateLayout'[旧版]
