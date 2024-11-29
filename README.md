@@ -1,8 +1,8 @@
-# StateLayout (DevEco-5.0.5.200)
+# StateLayout (DevEco-5.0.3.900)
 
 ## 简介
 
-[StateLayout](https://github.com/ChawLoo/StateLayout.git) ，是一个针对HarmonyOS Next系统开发的沉浸式框架，采用官方底层API，简单、实用、高效。
+[StateLayout](https://github.com/ChawLoo/StateLayout.git) ，是一个针对HarmonyOS Next系统开发的缺省页框架，简单、实用、高效。
 
 - 根据状态显示对应状态页面
 - 可以全局配置状态页样式
@@ -16,7 +16,7 @@ ohpm i @chawloo/state-layout
 | 版本     | 说明                                   |
 |:-------|:-------------------------------------|
 | V1.2.2 | V1版本，用的都是@Component、@State、@Link等    |
-| V2.2.1 | V2版本，用的都是@ComponentV2、@Local、@Param等 |
+| V2.2.2 | V2版本，用的都是@ComponentV2、@Local、@Param等 |
 
 OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmony ohpm 包](https://gitee.com/openharmony-tpc/docs/blob/master/OpenHarmony_har_usage.md)
 
@@ -61,8 +61,8 @@ onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
   GlobalStateConfig.showLoadingWhenRetry:boolean = false// 关闭点击重试按钮自动切换加载中
 }
 ```
-### V2.1.0-beta.1 新增内容
-在EntryAbility中配置全局Builder，去自定义缺省页的内容,仍然支持emptyConfig
+### V2.1.0 新增内容
+在EntryAbility中配置全局Builder，去自定义缺省页的内容,仍然支持emptyConfig,也可以不用理会这个入参，因为全局Builder必须有入参
 ```typescript
 @Builder
 function GlobalEmptyBuilder(emptyConfig?: EmptyConfig) {
@@ -81,9 +81,11 @@ export default class EntryAbility extends UIAbility{
 
 
 ## 控制器 `StateController`
+重要的写前面，机制问题，建议在onAppear()方法中用控制器切换缺省页，如果放在aboutToAppear()或其他过早生命周期里面的话，会因为绘制时序问题导致切换失败
 
 | 接口                               | 描述               |
 |:---------------------------------|:-----------------|
+| state                            | 状态变量             |
 | loading(LoadingConfig)           | 显示加载中(可单次配置)     |
 | empty(EmptyConfig)               | 显示空白缺省页(可单次配置)   |
 | error(ErrorConfig)               | 显示错误缺省页(可单次配置)   |
@@ -136,7 +138,7 @@ export default class EntryAbility extends UIAbility{
 struct Index {
   controller: StateController = new StateController() //初始化StateController
   @Local message: string = 'Hello World'
-
+  
 
   aboutToAppear(): void {
     this.loading()
@@ -152,25 +154,121 @@ struct Index {
 
   build() {
     Column() {
-      //加入缺省页组件
-      StateLayout({
-        controller: this.controller,
-        retry: () => {
-          this.loading()
+      SelectTitleBar({
+        options: [
+          { value: '加载中' },
+          { value: '空白页（全局文案和图标）' },
+          { value: '空白页（单例文案和图标）' },
+          { value: '错误页' },
+          { value: '错误页（单例重试按钮和事件）' },
+          { value: '错误页（单例重试事件并覆盖）' },
+          { value: '没有网络' },
+          { value: '没有网络（自动显示加载）' },
+          { value: '没有网络（不自动显示加载）' },
+          { value: '未登录' },
+          { value: '加载成功' },
+        ],
+        subtitle: '如果设置了全局Builder,则完全自定义',
+        onSelected: (index) => {
+          switch (index) {
+            case 0:
+              this.controller.loading()
+              break
+            case 1:
+              this.controller.empty()
+              break
+            case 2:
+              this.controller.empty({
+                emptyStr: '我是单例空白文案',
+                emptyIcon: $r('app.media.state_empty')
+              })
+              break
+            case 3:
+              this.controller.error()
+              break
+            case 4:
+              this.controller.error({
+                retryStr: '我是单例错误按钮',
+                errorStr: `我是单例错误文案`,
+                isCoverRetry: false, //不会覆盖
+                retry: () => {
+                  promptAction.showToast({ message: '我是单例重试事件' })
+                }
+              })
+              break
+            case 5:
+              this.controller.error({
+                retryStr: '给我重试',
+                errorStr: '单例重试事件，后续点击重试，执行覆盖的重试',
+                isCoverRetry: true, //覆盖原来的重试，普通的error和netError后，重试时间被覆盖
+                retry: () => {
+                  promptAction.showToast({ message: '我是覆盖的重试事件' })
+                }
+              })
+              break
+            case 6:
+              this.controller.networkError({
+                networkErrorStr: '网络错误（点击重试根据全局配置是否自动加载中）',
+              })
+              break
+            case 7:
+              this.controller.networkError({
+                networkErrorStr: '网络错误（点击重试自动显示加载中）',
+                showLoadingWhenRetry: true
+              })
+              break
+            case 8:
+              this.controller.networkError({
+                networkErrorStr: '网络错误（点击重试不会自动显示加载中）',
+                showLoadingWhenRetry: false
+              })
+              break
+            case 9:
+              this.controller.error({
+                errorStr: '未登录状态提示，等同于Error',
+                retryStr: '立即登录',
+                showLoadingWhenRetry: false,
+                retry: () => {
+                  promptAction.showToast({
+                    message: '跳转登录的点击事件'
+                  })
+                }
+              })
+              break
+            case 10:
+              this.controller.content()
+              break
+          }
         },
-      }) {
-        Text(`加载成功后的内容:::${this.message}`)
-          .fontSize(30)
-          .fontColor(Color.Black)
-          .onClick(() => {
-            router.pushUrl({
-              url: "pages/StateLayoutPage"
-            })
-          })
+        hidesBackButton: true
+      })
+      Row() {
+        StateLayout({
+          controller: this.controller,
+          retry: () => {
+            promptAction.showToast({ message: '我是最初重试事件' })
+            this.loading()
+          },
+        }) {
+          Column() {
+            Text(`加载成功后的内容:::${this.message}(点击文案跳转直接修改的方案)`)
+              .fontSize(30)
+              .fontColor(Color.Black)
+              .onClick(() => {
+                router.pushUrl({
+                  url: "pages/StateLayoutPage"
+                })
+              })
+          }
+          .justifyContent(FlexAlign.Center)
+          .alignItems(HorizontalAlign.Center)
+          .width('100%')
+        }
       }
+      .layoutWeight(1)
     }
     .height('100%')
-      .width('100%')
+    .width('100%')
   }
 }
 ```
@@ -286,21 +384,23 @@ struct Index {
         },
         hidesBackButton: true
       })
-      StateLayout({
-        controller: this.controller,
-        retry: () => {
-          promptAction.showToast({ message: '我是最初重试事件' })
-          this.loading()
-        },
-      }) {
-        Text(`加载成功后的内容:::${this.message}`)
-          .fontSize(30)
-          .fontColor(Color.Black)
-          .onClick(() => {
-            router.pushUrl({
-              url: "pages/StateLayoutPage"
+      Row(){
+        StateLayout({
+          controller: this.controller,
+          retry: () => {
+            promptAction.showToast({ message: '我是最初重试事件' })
+            this.loading()
+          },
+        }) {
+          Text(`加载成功后的内容:::${this.message}`)
+            .fontSize(30)
+            .fontColor(Color.Black)
+            .onClick(() => {
+              router.pushUrl({
+                url: "pages/StateLayoutPage"
+              })
             })
-          })
+        }
       }
     }
     .height('100%')
@@ -314,7 +414,7 @@ struct Index {
 ## 约束与限制
 
 在下述版本验证通过：
-DevEco Studio NEXT Release  (5.0.3.900), SDK: API12(5.0.0) 设备：Mate 60 Pro（Release）
+DevEco Studio 5.0.1 Beta3  (5.0.5.200), SDK: API12(5.0.0) 设备：Mate 60 Pro（Release）
 
 ## FAQ
 - 目前只是简单的设置，细节问题和更多功能正在研究和发掘开发，欢迎提交PR，共同进步
