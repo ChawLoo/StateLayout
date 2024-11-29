@@ -1,5 +1,11 @@
 # Changelog
 
+## [V2.2.2] 2024.11.29
+
+- 修复组件在空白缺省状态没有修改isCenter参数的问题，（原先写错地方了）
+- 注意，用Row包裹后，不能给StateLayout任何链式调用，因为渲染时组件树会多出来__common__节点，就会让StateLayout和Row之间多一层容器，导致ItemAlign失效
+- 完善一下CHANGELOG.md的文案
+
 ## [V2.2.1] 2024.11
 
 - 优化页面展示效果，移除StateLayout最外层的宽高100%，使其本身自适应高度，除了content的缺省页均最小高度并居中，根据状态动态化切换居中和垂直Start
@@ -17,8 +23,8 @@
 
 ## [V2.1.0] 2024.10
 
-- 新增功能不升级该版本不影响使用 https://github.com/ChawLoo/StateLayout/issues/2
-- 新增全局Builder去配置缺省页(⚠️⚠️注意全局Builder有一定的局限性)
+- 新增功能不升级该版本不影响使用 [issue#2](https://github.com/ChawLoo/StateLayout/issues/2)
+- 新增全局Builder去配置缺省页(⚠️⚠️注意全局Builder有一定的局限性,其实也是交给开发者全权处理了，所以局限性是框架对开发者定的布局有一定局限性操作)
 - 如有需要，可以增加一个json字符串，在对应Builder中解析获取
 - 目前仅更新V2版本功能，如需请提issue，或者提PR
 
@@ -44,7 +50,7 @@
 
 ## [V1.2.2] 2024.07
 
-- 放开原来的方案，将所有属性改为@Prop，可以外部@State传入进行修改，这样就全部手动了，用于解决绘制时序问题。https://github.com/ChawLoo/StateLayout/issues/1
+- 放开原来的方案，将所有属性改为@Prop，可以外部@State传入进行修改，这样就全部手动了，用于解决绘制时序问题。[issue#1](https://github.com/ChawLoo/StateLayout/issues/1)
 - 两种方案都支持，但是手动方案没有自动方案来的舒畅和全面。
 - 求点在Like，跪谢
 

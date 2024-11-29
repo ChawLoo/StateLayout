@@ -1,20 +1,22 @@
-import { StateEnum, StateLayout } from '@chawloo/state-layout';
+import { StateController, StateEnum, StateLayout } from '@chawloo/state-layout';
 
 @Entry
 @ComponentV2
 struct StateLayoutPage {
   @Local message: string = 'Hello World';
-  @Local state: StateEnum = StateEnum.EMPTY //很神奇，本地默认的值居然比不过全局默认状态
+  @Local controller: StateController = new StateController()
 
   @Builder
   contentBuilder() {
     Text(this.message)
       .fontSize(30)
+      .textAlign(TextAlign.Center)
+      .width('100%')
   }
 
   onDidBuild(): void {
     setTimeout(() => {
-      this.state = StateEnum.ERROR
+      this.controller.state = StateEnum.CONTENT
     }, 1000)
   }
 
@@ -22,7 +24,7 @@ struct StateLayoutPage {
     Column() {
       Row() {
         StateLayout({
-          state: this.state,
+          controller: this.controller,
           contentBuilder: () => {
             this.contentBuilder()
           }
@@ -32,9 +34,9 @@ struct StateLayoutPage {
 
       Button('改变状态')
         .onClick(() => {
-          this.state = StateEnum.LOADING
+          this.controller.state = StateEnum.LOADING
           setTimeout(() => {
-            this.state = StateEnum.CONTENT
+            this.controller.state = StateEnum.CONTENT
           }, 2000)
         })
     }

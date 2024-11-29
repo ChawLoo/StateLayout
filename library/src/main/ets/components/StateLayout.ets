@@ -11,8 +11,6 @@ function NothingBuilder() {
 @ComponentV2
 export struct StateLayout {
   @Local showLoadingWhenRetry: boolean = StateConfig.globalStateConfig.showLoadingWhenRetry
-  @Local localState: StateEnum = StateConfig.globalStateConfig.defaultState
-  @Param state: StateEnum = StateConfig.globalStateConfig.defaultState
   @Local localLoadingStr: string = StateConfig.globalStateConfig.loadingStr
   @Local localProgressColor: ResourceColor = StateConfig.globalStateConfig.progressColor
   @Local localEmptyStr: string = StateConfig.globalStateConfig.emptyStr
@@ -24,7 +22,7 @@ export struct StateLayout {
   @Local localNetworkErrorIcon: Resource = StateConfig.globalStateConfig.networkErrorIcon
   @Event priorityRetry?: () => void // 优先加载，用于单次传入的retry
   @Event retry: () => void
-  @Param controller: StateController = new StateController();
+  @Param controller: StateController = new StateController()
   @BuilderParam public contentBuilder: () => void = NothingBuilder
   /**
    * 2024年11月22日新增V2.2.1版本新增，用于根据缺省状态切换居中显示还是Start，
@@ -33,10 +31,9 @@ export struct StateLayout {
    */
   @Local isCenter: boolean = true
 
-  @Monitor('state')
+  @Monitor('controller.state')
   onStateChange() {
-    this.localState = this.state
-    this.isCenter = this.localState != StateEnum.CONTENT
+    this.isCenter = this.controller.state != StateEnum.CONTENT
   }
 
   aboutToAppear(): void {
@@ -54,9 +51,10 @@ export struct StateLayout {
     if (config?.loadingStr) {
       this.localLoadingStr = isNotBlank(config.loadingStr) ? config.loadingStr : StateConfig.globalStateConfig.loadingStr
     }
-    this.localState = StateEnum.LOADING
+    this.controller.state = StateEnum.LOADING
   }
   private empty = (config?: EmptyConfig) => {
+    this.isCenter = true
     if (config?.emptyStr) {
       this.localEmptyStr = isNotBlank(config?.emptyStr) ? config?.emptyStr : StateConfig.globalStateConfig.emptyStr
     } else {
@@ -67,7 +65,7 @@ export struct StateLayout {
     } else {
       this.localEmptyIcon = StateConfig.globalStateConfig.emptyIcon
     }
-    this.localState = StateEnum.EMPTY
+    this.controller.state = StateEnum.EMPTY
   }
   private error = (config?: ErrorConfig) => {
     this.isCenter = true
@@ -97,7 +95,7 @@ export struct StateLayout {
     } else {
       this.showLoadingWhenRetry = StateConfig.globalStateConfig.showLoadingWhenRetry
     }
-    this.localState = StateEnum.ERROR
+    this.controller.state = StateEnum.ERROR
   }
   private networkError = (config?: NetworkErrorConfig) => {
     this.isCenter = true
@@ -123,21 +121,20 @@ export struct StateLayout {
       }
     }
     if (config?.showLoadingWhenRetry !== undefined) {
-      this.isCenter = true
       this.showLoadingWhenRetry = config.showLoadingWhenRetry
     } else {
       this.showLoadingWhenRetry = StateConfig.globalStateConfig.showLoadingWhenRetry
     }
-    this.localState = StateEnum.NETWORK_ERROR
+    this.controller.state = StateEnum.NETWORK_ERROR
   }
   private content = () => {
     this.isCenter = false
-    this.localState = StateEnum.CONTENT
+    this.controller.state = StateEnum.CONTENT
   }
 
   build() {
     Column() {
-      if (this.localState == StateEnum.LOADING) {
+      if (this.controller.state == StateEnum.LOADING) {
         Column() {
           if (GlobalStateConfig.globalLoadingBuilder) {
             GlobalStateConfig.globalLoadingBuilder.builder({
@@ -151,7 +148,7 @@ export struct StateLayout {
         .justifyContent(FlexAlign.Center)
         .alignItems(HorizontalAlign.Center)
         .width('100%')
-      } else if (this.localState == StateEnum.EMPTY) {
+      } else if (this.controller.state == StateEnum.EMPTY) {
         Column() {
           if (GlobalStateConfig.globalEmptyBuilder) {
             GlobalStateConfig.globalEmptyBuilder.builder({
@@ -165,7 +162,7 @@ export struct StateLayout {
         .justifyContent(FlexAlign.Center)
         .alignItems(HorizontalAlign.Center)
         .width('100%')
-      } else if (this.localState == StateEnum.ERROR) {
+      } else if (this.controller.state == StateEnum.ERROR) {
         Column() {
           if (GlobalStateConfig.globalErrorBuilder) {
             GlobalStateConfig.globalErrorBuilder.builder({
@@ -182,7 +179,7 @@ export struct StateLayout {
         .width('100%')
         .justifyContent(FlexAlign.Center)
         .alignItems(HorizontalAlign.Center)
-      } else if (this.localState == StateEnum.NETWORK_ERROR) {
+      } else if (this.controller.state == StateEnum.NETWORK_ERROR) {
         Column() {
           if (GlobalStateConfig.globalNetworkBuilder) {
             GlobalStateConfig.globalNetworkBuilder.builder({
@@ -243,8 +240,8 @@ export struct StateLayout {
       .fontColor(0xFF3369E7)
       .margin({ top: 10 })
       .onClick(() => {
-        if (this.showLoadingWhenRetry && this.localState != StateEnum.LOADING) {
-          this.localState = StateEnum.LOADING
+        if (this.showLoadingWhenRetry && this.controller.state != StateEnum.LOADING) {
+          this.controller.state = StateEnum.LOADING
         }
         if (this.priorityRetry) {
           this.priorityRetry()
@@ -270,8 +267,8 @@ export struct StateLayout {
       .fontColor(0xFF3369E7)
       .margin({ top: 10 })
       .onClick(() => {
-        if (this.showLoadingWhenRetry && this.localState != StateEnum.LOADING) {
-          this.localState = StateEnum.LOADING
+        if (this.showLoadingWhenRetry && this.controller.state != StateEnum.LOADING) {
+          this.controller.state = StateEnum.LOADING
         }
         if (this.priorityRetry) {
           this.priorityRetry()

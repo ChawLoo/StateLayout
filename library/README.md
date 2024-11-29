@@ -16,7 +16,7 @@ ohpm i @chawloo/state-layout
 | 版本     | 说明                                   |
 |:-------|:-------------------------------------|
 | V1.2.2 | V1版本，用的都是@Component、@State、@Link等    |
-| V2.2.1 | V2版本，用的都是@ComponentV2、@Local、@Param等 |
+| V2.2.2 | V2版本，用的都是@ComponentV2、@Local、@Param等 |
 
 OpenHarmony ohpm 环境配置等更多内容，请参考[如何安装 OpenHarmony ohpm 包](https://gitee.com/openharmony-tpc/docs/blob/master/OpenHarmony_har_usage.md)
 
@@ -85,6 +85,7 @@ export default class EntryAbility extends UIAbility{
 
 | 接口                               | 描述               |
 |:---------------------------------|:-----------------|
+| state                            | 状态变量             |
 | loading(LoadingConfig)           | 显示加载中(可单次配置)     |
 | empty(EmptyConfig)               | 显示空白缺省页(可单次配置)   |
 | error(ErrorConfig)               | 显示错误缺省页(可单次配置)   |

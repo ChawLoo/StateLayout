@@ -1,7 +1,10 @@
-import { EmptyConfig, ErrorConfig, LoadingConfig, NetworkErrorConfig } from './StateConfig';
+import StateConfig, { EmptyConfig, ErrorConfig, LoadingConfig, NetworkErrorConfig } from './StateConfig';
+import { StateEnum } from './StateEnum';
 
+@ObservedV2
 export class StateController {
   loadingEvent?: (config?: LoadingConfig) => void
+  @Trace state: StateEnum = StateConfig.globalStateConfig.defaultState
 
   loading(config?: LoadingConfig) {
     if (this.loadingEvent) {
