@@ -11,3 +11,8 @@
 **/.test
 /.appanalyzer
 /entry/patch.json
+.DS_Store
+library/.DS_Store
+library/src/main/.DS_Store
+library/src/main/ets/.DS_Store
+library/src/main/resources/base/media/.DS_Store
